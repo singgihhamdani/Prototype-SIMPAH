@@ -1,0 +1,97 @@
+# Product Requirements Document (PRD)
+**SIMPAH (Sistem Informasi Monitoring Pengelolaan Sampah)**
+
+---
+
+## 1. Executive Summary
+
+**SIMPAH** adalah platform digital berbasis Progressive Web App (PWA) dan Web Dashboard yang berfungsi untuk memonitor, mencatat, dan menganalisis siklus pengelolaan sampah secara *end-to-end*—dari tingkat masyarakat akar rumput hingga Dinas Lingkungan Hidup.
+
+Aplikasi ini tidak hanya sekadar alat untuk pencatatan entri data, melainkan sebuah **sistem kendali pengelolaan sampah kabupaten secara real-time dan terintegrasi.** 
+
+Tujuan utama sistem ini adalah meningkatkan akurasi data pencatatan, mempermudah pelaporan yang kompatibel dengan **SIPSN** (Sistem Informasi Pengelolaan Sampah Nasional), memberikan transparansi operasional, serta memastikan akuntabilitas rantai proses melalui jejak audit (audit trail) berbasis GPS dan stempel waktu (*timestamp*).
+
+---
+
+## 2. Product Vision & Value Proposition
+
+### Value Utama Produk
+1. **Standarisasi Data:** Transformasi format data di lapangan agar bisa sejalan secara penuh dengan standar SIPSN.
+2. **Monitoring Berbasis Peta (GIS):** Visualisasi geospasial (bukan sekadar tabel) untuk memantau sebaran infrastruktur TPS/Bank Sampah serta mendeteksi konsentrasi volume (heatmap).
+3. **Efisiensi SIPSN:** Mempermudah pembuatan laporan bagi Dinas, didukung fitur Export siap *upload*.
+4. **Transparansi & Akuntabilitas:** Tiap entri bisa dilacak kembali siapa pengunggahnya, kapan diunggah, dan di mana persis lokasinya (*auto-geolocation*).
+5. **Keterlibatan Masyarakat:** Pemberdayaan warga untuk secara aktif memilah sampah dan berani melaporkan permasalahan lewat Form Aduan anonim.
+
+### Key Message (Arah Pitching/Presentasi)
+> *"Ini bukan sekadar aplikasi pencatatan, tapi sistem kendali pengelolaan sampah kabupaten secara real-time dan terintegrasi."*
+
+---
+
+## 3. Target Pengguna (User Personas)
+
+| Peran (Role) | Kebutuhan Utama & Hak Akses |
+| --- | --- |
+| **Kader / Nasabah** | Memasukkan data sampah yang dipilah dari skala rumah tangga (Akses PWA Mobile). |
+| **Petugas Pengangkut** | Memasukkan data manifest truk, sampah masuk/residu, dan rute (Akses PWA Mobile). |
+| **Pemerintah Desa (Pemdes)** | Mengelola infrastruktur level mikro tingkat desa, memonitor rekap TPS operasional wilayahnya, dan memberdayakan Kader Lapangan. |
+| **Pengepul** | Mencatat sampah yang akan dikonversi menjadi bernilai ekonomi / daur ulang. |
+| **Dinas (Eksekutif)** | Akses dashboard *bird-eye view*, mengekstrak laporan SIPSN, memonitor kinerja, dan mengatur MoU transporter. |
+| **Masyarakat Publik** | Membaca edukasi, mengecek regulasi, serta membuat keluhan masalah (Aduan). |
+
+---
+
+## 4. Core System & Features
+
+### 4.1. PWA Operasional (Lapangan - Mobile First)
+Didesain khusus untuk operasional di lapangan menggunakan perangkat *mobile* kelas menengah ke bawah (*low-end*).
+*   **Performa Ekstra Cepat:** Flow input ringkas `< 10 detik` dengan tombol besar.
+*   **Mode Offline-First:** Pengguna dapat mencatat data di daerah tanpa sinyal internet. Data tersimpan di *cache* lokal (IndexedDB) dan di-*sync* atau dikirim secara otomatis saat jaringan tersedia.
+*   **Form Pencatatan Komprehensif:** 
+    *   *Sampah Masuk* (Masuk ke TPS).
+    *   *Sampah Terpilah* (Pemilahan berdasarkan kategori SIPSN otomatis).
+    *   *Residu* (Volume yang tidak bisa diolah dan masuk TPA).
+*   **Geotagging & Lampiran:** Mengambil Lokasi GPS secara otomatis di balik layar, dilengkapi lampiran bukti foto kamera.
+*   **Insidental Form:** Menu khusus penjadwalan kegiatan insidental (Misal: kerja bakti RT, pembersihan khusus, edukasi, lainnya).
+*   **Validasi Armada & MoU:** Fitur mencantumkan pelat nomor/kode kendaraan pada saat pembuangan ke TPA guna validasi MoU transportasi (mencegah pembuang luar kawasan/liar).
+
+### 4.2. Dashboard GIS (Geospasial)
+Peta interaktif (*bird-eye view*) untuk pemetaan tata kelola lingkungan kabupaten.
+*   **Pemetaan Titik Lokasi (POIs):** Memvisualisasikan TPS, TPS3R, Bank Sampah, lokasi Pengepul hingga lokasi TPA di peta interaktif.
+*   **Volume Heatmap:** Menampilkan *heatmap* intensitas penumpukan/produksi volume sampah pada berbagai wilayah untuk menentukan skala prioritas tindakan.
+*   **Filter Geospasial:** Visualisasikan data lokasi tersebut berdasarkan interval kapan data diambil dan klasifikasi jenis lokasi.
+
+### 4.3. Dashboard Eksekutif (Dinas DLHK/DLH)
+Panel ringkasan (*Analytics & Reporting*) berorientasi indikator KPI makro kabupaten.
+*   **Alur Validasi Data (Anti-Fraud):** Seluruh input dari Kader di lapangan harus melalui meja validasi elektronik (Status *Pending*) sebelum disetujui masuk kalkulasi statistik SIPSN, guna menghindari manipulasi target tonase sampah.
+*   **Dasbor Intervensi Desa (Decision Support System):** Mesin intelijen terotomatisasi (*Rule Engine*) yang memberikan *traffic light scoring* kepada setiap desa berdasarkan rasio daur ulang, aduan, dan residu tingkat mikro, lengkap dengan menu *Export PDF Rekomendasi Prioritas* siap cetak.
+*   **Laporan Multi-Tempo:** Grafik rekap volume sampah, residu, dan *recycling rate* secara Harian, Mingguan, Bulanan, dan Tahunan.
+*   **Export Data Terstandarisasi:** Unduh tabel tabulasi yang diformat *plek-ketiplek* sesuai kolom persyaratan SIPSN (via *CSV* atau *Excel*).
+*   **Manajemen MoU Transportasi:** Meninjau daftar armada transporter swasta, melacak nomor registrasi, serta status aktif/kadaluarsa dari perjanjian MoU.
+
+### 4.4. Portal Publik 
+Gerbang transparansi, partisipasi informasi, dan serap aspirasi warga.
+*   **Modul Edukasi & Galeri:** Kumpulan artikel artikel panduan (*composting*, daur ulang), dan galeri kegiatan kebersihan daerah.
+*   **Halaman Regulasi:** Direktori terpusat untuk menampilkan Perda dan Perbup yang berkaitan dengan persampahan. Downloadable *PDF*.
+*   **Lapor & Aduan (Without Login):**
+    *   Memungkinkan masyarakat untuk melapor masalah (seperti TPS membludak / tumpukan liar).
+    *   Sistem Nomor Tiket (Resi Pelacakan Publik) yang transparan untuk cek status penanganan *-- (Roadmap)*.
+    *   Otomatis menarik *Geotagging* Lokasi warga.
+    *   Wajib menyertakan *Upload Foto*.
+
+---
+
+## 5. Non-Functional Requirements (NFR)
+
+1.  **Optimization for Low-End Devices:** Antarmuka harus *resource-friendly*; mampu beroperasi mulus pada HP Android dengan RAM 1–2 GB. Animasi dan elemen-elemen dikurangi di sisi Mobile PWA.
+2.  **SLA Kecepatan Load:** *Web Dashboard* mentargetkan perenderan data (< 3 detik batas toleransi visual).
+3.  **Keamanan Audit (Auditability):** Semua transaksi di database harus menyimpan jejak: (a) Kapan dibuat, (b) Siapa yang memasukkan (*userID*), dan (c) Di mana koordinatnya (*lat, lng*).
+4.  **Standarisasi SIPSN:** Arsitektur dari variabel skema database mengikuti standar pembakuan tipe tipe bahan SIPSN (mis: *Sisa Makanan, Kayu, Kertas, Plastik, Logam, Tekstil, dll*).
+
+---
+
+## 6. Output Utama (Deliverables) Proyek 
+
+1.  **Aplikasi Dashboard Skala Kabupaten:** Yang mendukung monitoring pusat untuk pengampu kebijakan.
+2.  **Dataset Siap Audit:** Yang transparan, tidak bisa dirubah sesuka hati, dan valid berdasarkan parameter lapangan.
+3.  **Peta Wilayah Prioritas:** Visualisasi yang tajam untuk membantu Dinas Lingkungan dalam alokasi resources (truk/tenaga kebersihan) berdasarkan heatmap sampah.
+4.  **Ekosistem yang Fleksibel (Replicable):** Infrastruktur berbasis modul *(frontend decoupled)* yang siap untuk direplikasi ke sistem kabupaten/kota tetangga apabila terbukti sukses.

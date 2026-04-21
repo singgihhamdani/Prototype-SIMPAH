@@ -1,0 +1,272 @@
+// SIMPAH - Data Access Layer (CRUD)
+import { getDB } from './schema.js';
+import { createAuditEntry } from '../utils/audit.js';
+
+// ========== Generic CRUD ==========
+async function getAll(storeName) {
+  const db = await getDB();
+  return db.getAll(storeName);
+}
+
+async function getById(storeName, id) {
+  const db = await getDB();
+  return db.get(storeName, id);
+}
+
+async function put(storeName, data) {
+  const db = await getDB();
+  return db.put(storeName, data);
+}
+
+async function deleteById(storeName, id) {
+  const db = await getDB();
+  return db.delete(storeName, id);
+}
+
+async function getByIndex(storeName, indexName, value) {
+  const db = await getDB();
+  return db.getAllFromIndex(storeName, indexName, value);
+}
+
+async function countAll(storeName) {
+  const db = await getDB();
+  return db.count(storeName);
+}
+
+// ========== Waste Records ==========
+export async function getAllWasteRecords() {
+  return getAll('waste_records');
+}
+
+export async function getWasteRecordsByType(type) {
+  return getByIndex('waste_records', 'type', type);
+}
+
+export async function getWasteRecordsByDate(dateStr) {
+  return getByIndex('waste_records', 'date_str', dateStr);
+}
+
+export async function addWasteRecord(record, userId) {
+  const data = {
+    ...record,
+    id: record.id || generateId(),
+    created_at: new Date().toISOString(),
+    date_str: new Date().toISOString().split('T')[0],
+    synced: false,
+    verification_status: 'pending' // Anti-fraud: new records require Dinas approval
+  };
+  await put('waste_records', data);
+  await createAuditEntry('waste_records', data.id, 'create', userId, data);
+  return data;
+}
+
+export async function updateWasteRecordStatus(id, status, notes = '', userId = 'system') {
+  const record = await getWasteRecordById(id);
+  if (!record) throw new Error('Record not found');
+  
+  const oldStatus = record.verification_status;
+  record.verification_status = status;
+  if (notes) record.verification_notes = notes;
+  record.verified_at = new Date().toISOString();
+  record.verified_by = userId;
+  
+  await put('waste_records', record);
+  await createAuditEntry('waste_records', id, `status_${status}`, userId, { old: oldStatus, new: status, notes });
+  return record;
+}
+
+export async function getWasteRecordById(id) {
+  return getById('waste_records', id);
+}
+
+export async function getUnsyncedRecords() {
+  return getByIndex('waste_records', 'synced', false);
+}
+
+export async function markAsSynced(id) {
+  const record = await getById('waste_records', id);
+  if (record) {
+    record.synced = true;
+    await put('waste_records', record);
+  }
+}
+
+// ========== Sorted Waste ==========
+export async function addSortedWaste(items, wasteRecordId, userId) {
+  const db = await getDB();
+  const tx = db.transaction('sorted_waste', 'readwrite');
+  const results = [];
+  for (const item of items) {
+    const data = {
+      ...item,
+      id: item.id || generateId(),
+      waste_record_id: wasteRecordId,
+      created_at: new Date().toISOString()
+    };
+    await tx.store.put(data);
+    results.push(data);
+  }
+  await tx.done;
+  return results;
+}
+
+export async function getSortedWasteByRecord(wasteRecordId) {
+  return getByIndex('sorted_waste', 'waste_record_id', wasteRecordId);
+}
+
+// ========== Locations ==========
+export async function getAllLocations() {
+  return getAll('locations');
+}
+
+export async function getLocationsByType(type) {
+  return getByIndex('locations', 'type', type);
+}
+
+export async function addLocation(location) {
+  return put('locations', { ...location, id: location.id || generateId() });
+}
+
+// ========== Fleet ==========
+export async function getAllFleet() {
+  return getAll('fleet');
+}
+
+export async function addFleet(fleet, userId) {
+  const data = {
+    ...fleet,
+    id: fleet.id || generateId(),
+    created_at: new Date().toISOString()
+  };
+  await put('fleet', data);
+  await createAuditEntry('fleet', data.id, 'create', userId, data);
+  return data;
+}
+
+// ========== MoU ==========
+export async function getAllMou() {
+  return getAll('mou');
+}
+
+export async function getMouByStatus(status) {
+  return getByIndex('mou', 'status', status);
+}
+
+export async function addMou(mou) {
+  return put('mou', { ...mou, id: mou.id || generateId() });
+}
+
+export async function updateMouStatus(id, status) {
+  const mou = await getById('mou', id);
+  if (mou) {
+    mou.status = status;
+    mou.updated_at = new Date().toISOString();
+    await put('mou', mou);
+  }
+}
+
+// ========== Complaints ==========
+export async function getAllComplaints() {
+  return getAll('complaints');
+}
+
+export async function addComplaint(complaint) {
+  const data = {
+    ...complaint,
+    id: complaint.id || generateId(),
+    tracking_number: generateTrackingNumber(),
+    status: 'baru',
+    created_at: new Date().toISOString()
+  };
+  await put('complaints', data);
+  return data;
+}
+
+// ========== Incidental Events ==========
+export async function getAllEvents() {
+  return getAll('incidental_events');
+}
+
+export async function addEvent(event, userId) {
+  const data = {
+    ...event,
+    id: event.id || generateId(),
+    created_at: new Date().toISOString()
+  };
+  await put('incidental_events', data);
+  await createAuditEntry('incidental_events', data.id, 'create', userId, data);
+  return data;
+}
+
+// ========== Users ==========
+export async function getAllUsers() {
+  return getAll('users');
+}
+
+export async function getUserByUsername(username) {
+  const users = await getByIndex('users', 'username', username);
+  return users[0] || null;
+}
+
+export async function addUser(user) {
+  return put('users', user);
+}
+
+export async function getWasteStats() {
+  const allRecords = await getAllWasteRecords();
+  
+  // Filter only approved/legacy records for stats
+  const records = allRecords.filter(r => 
+    !r.verification_status || r.verification_status === 'approved'
+  );
+
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  const thisMonth = today.substring(0, 7);
+
+  const todayRecords = records.filter(r => r.date_str === today);
+  const monthRecords = records.filter(r => r.date_str?.startsWith(thisMonth));
+
+  const totalWeight = records.reduce((sum, r) => sum + (r.weight_kg || 0), 0);
+  const todayWeight = todayRecords.reduce((sum, r) => sum + (r.weight_kg || 0), 0);
+  const monthWeight = monthRecords.reduce((sum, r) => sum + (r.weight_kg || 0), 0);
+
+  const masukWeight = records.filter(r => r.type === 'masuk').reduce((s, r) => s + (r.weight_kg || 0), 0);
+  const pilahWeight = records.filter(r => r.type === 'pilah').reduce((s, r) => s + (r.weight_kg || 0), 0);
+  const residuWeight = records.filter(r => r.type === 'residu').reduce((s, r) => s + (r.weight_kg || 0), 0);
+
+  const recycleRate = masukWeight > 0 ? ((pilahWeight / masukWeight) * 100).toFixed(1) : 0;
+
+  const byCategory = {};
+  records.forEach(r => {
+    if (r.category_sipsn) {
+      byCategory[r.category_sipsn] = (byCategory[r.category_sipsn] || 0) + (r.weight_kg || 0);
+    }
+  });
+
+  return {
+    totalRecords: records.length,
+    totalWeight,
+    todayWeight,
+    monthWeight,
+    todayRecords: todayRecords.length,
+    masukWeight,
+    pilahWeight,
+    residuWeight,
+    recycleRate: parseFloat(recycleRate),
+    byCategory,
+    records
+  };
+}
+
+// ========== Helpers ==========
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+}
+
+function generateTrackingNumber() {
+  const prefix = 'ADU';
+  const date = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+  const rand = Math.floor(Math.random() * 9000 + 1000);
+  return `${prefix}-${date}-${rand}`;
+}

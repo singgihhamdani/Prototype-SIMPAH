@@ -1,0 +1,33 @@
+erDiagram
+    USERS {
+        string id PK
+        string username UK
+        string role "kader, petugas, pemdes, dinas"
+        string password
+    }
+
+    WASTE_RECORDS {
+        string id PK
+        string type "masuk, pilah, residu"
+        string category_sipsn
+        float weight_kg
+        string location_id FK
+        string user_id FK
+        boolean synced
+        string verification_status "pending, approved, rejected"
+    }
+
+    LOCATIONS {
+        string id PK
+        string type "tps, tps3r, bank_sampah, tpa"
+        string wilayah
+    }
+
+    COMPLAINTS {
+        string id PK
+        string tracking_number UK
+        string status "baru, diproses, selesai"
+    }
+
+    USERS ||--o{ WASTE_RECORDS : "inputs"
+    LOCATIONS ||--o{ WASTE_RECORDS : "originates_from"
