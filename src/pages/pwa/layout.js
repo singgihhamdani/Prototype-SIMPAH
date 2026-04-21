@@ -42,7 +42,7 @@ export function renderPWALayout(title, content, activeTab = 'home') {
           ${icons.clock}
           <span>Riwayat</span>
         </a>
-        <a href="#/pwa/input-sampah" class="bottom-nav-add">
+        <a href="${user?.role === 'petugas' ? '#/pwa/input-residu' : user?.role === 'pengepul' ? '#/pwa/input-pilah' : '#/pwa/input-sampah'}" class="bottom-nav-add">
           ${icons.plus}
         </a>
         <a href="#/dashboard/gis" class="bottom-nav-item ${activeTab === 'map' ? 'active' : ''}">

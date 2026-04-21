@@ -40,6 +40,7 @@ export async function getVillageProfiles() {
       // Waste volumes
       total_masuk_kg: 0,
       total_pilah_kg: 0,
+      total_olah_kg: 0,
       total_residu_kg: 0,
       total_all_kg: 0,
       // Record counts
@@ -77,6 +78,7 @@ export async function getVillageProfiles() {
 
     if (r.type === 'masuk') p.total_masuk_kg += r.weight_kg || 0;
     if (r.type === 'pilah') p.total_pilah_kg += r.weight_kg || 0;
+    if (r.type === 'olah') p.total_olah_kg += r.weight_kg || 0;
     if (r.type === 'residu') p.total_residu_kg += r.weight_kg || 0;
 
     if (!r.lat && !r.lng) p.tanpa_gps_count++;
@@ -137,7 +139,8 @@ export async function getVillageProfiles() {
   // Calculate derived metrics
   const result = Object.values(profiles).map(p => {
     const totalMasuk = p.total_masuk_kg || 1;
-    const recycling_rate = (p.total_pilah_kg / totalMasuk) * 100;
+    // Waste Reduction Rate = (Pilah + Olah) / Masuk × 100
+    const recycling_rate = ((p.total_pilah_kg + p.total_olah_kg) / totalMasuk) * 100;
     const residu_rate = (p.total_residu_kg / totalMasuk) * 100;
 
     // Trend analysis (last 3 months)

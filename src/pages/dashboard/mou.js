@@ -7,7 +7,7 @@ import { renderDashboardLayout } from './layout.js';
 
 export async function renderMou() {
   const user = getCurrentUser();
-  if (!user) { window.location.hash = '#/login'; return; }
+  if (!user || user.role !== 'dinas') { window.location.hash = '#/dashboard/gis'; return; }
 
   const mous = await getAllMou();
 

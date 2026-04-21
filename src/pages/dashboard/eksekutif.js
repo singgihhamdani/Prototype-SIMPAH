@@ -7,7 +7,7 @@ import { renderDashboardLayout } from './layout.js';
 
 export async function renderEksekutif() {
   const user = getCurrentUser();
-  if (!user) { window.location.hash = '#/login'; return; }
+  if (!user || user.role !== 'dinas') { window.location.hash = '#/dashboard/gis'; return; }
 
   const stats = await getWasteStats();
   const mous = await getAllMou();
@@ -43,7 +43,7 @@ export async function renderEksekutif() {
             ${icons.recycle}
           </div>
           <div class="stat-value" style="color:var(--info-600)">${formatPercent(stats.recycleRate)}</div>
-          <div class="stat-label">Tingkat Daur Ulang</div>
+          <div class="stat-label">Pengurangan Sampah</div>
           <div class="stat-trend up">${icons.trendUp} +3.2%</div>
         </div>
         <div class="stat-card">

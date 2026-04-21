@@ -12,7 +12,7 @@ export function exportToCSV(records, filename = 'simpah-export') {
   const rows = records.map((r, i) => [
     i + 1,
     formatDate(r.created_at),
-    r.type === 'masuk' ? 'Sampah Masuk' : r.type === 'pilah' ? 'Sampah Terpilah' : 'Residu',
+    r.type === 'masuk' ? 'Sampah Masuk' : r.type === 'pilah' ? 'Sampah Terpilah' : r.type === 'olah' ? 'Olah Sampah' : 'Residu',
     getCategoryName(r.category_sipsn),
     r.category_sipsn || '',
     r.weight_kg || 0,
@@ -48,7 +48,7 @@ export function exportToSIPSN(records, period = '') {
     if (r.category_sipsn && byCategory[r.category_sipsn] !== undefined) {
       byCategory[r.category_sipsn] += weightTon;
     }
-    if (r.type === 'pilah') totalManaged += weightTon;
+    if (r.type === 'pilah' || r.type === 'olah') totalManaged += weightTon;
     if (r.type === 'residu') totalResidu += weightTon;
   });
 
@@ -74,7 +74,7 @@ export async function exportToExcel(records, filename = 'simpah-report') {
     const data = records.map((r, i) => ({
       'No': i + 1,
       'Tanggal': formatDate(r.created_at),
-      'Jenis': r.type === 'masuk' ? 'Sampah Masuk' : r.type === 'pilah' ? 'Sampah Terpilah' : 'Residu',
+      'Jenis': r.type === 'masuk' ? 'Sampah Masuk' : r.type === 'pilah' ? 'Sampah Terpilah' : r.type === 'olah' ? 'Olah Sampah' : 'Residu',
       'Kategori': getCategoryName(r.category_sipsn),
       'Kode': r.category_sipsn || '',
       'Berat (kg)': r.weight_kg || 0,

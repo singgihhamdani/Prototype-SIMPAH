@@ -16,7 +16,20 @@ export const SIPSN_CATEGORIES = [
 export const WASTE_TYPES = [
   { id: 'masuk', label: 'Sampah Masuk', icon: '📥', color: 'green' },
   { id: 'pilah', label: 'Sampah Terpilah', icon: '♻️', color: 'blue' },
+  { id: 'olah', label: 'Olah Sampah', icon: '🔄', color: 'orange' },
   { id: 'residu', label: 'Residu', icon: '🗑️', color: 'red' }
+];
+
+export const TREATMENT_METHODS = [
+  { id: 'pakan_ternak', label: 'Pakan Ternak', emoji: '🐔', desc: 'Sisa makanan untuk pakan ayam, lele, sapi, dll' },
+  { id: 'maggot_bsf', label: 'Maggot BSF', emoji: '🪱', desc: 'Biokonversi larva Black Soldier Fly' },
+  { id: 'pengomposan', label: 'Pengomposan', emoji: '🍂', desc: 'Kompos aerob, takakura, komposter drum' },
+  { id: 'biogas', label: 'Biogas / Biodigester', emoji: '⚡', desc: 'Pengolahan organik menjadi energi gas' },
+  { id: 'insinerator', label: 'Insinerator', emoji: '🔥', desc: 'Pembakaran thermal tersertifikasi' },
+  { id: 'pirolisis', label: 'Pirolisis', emoji: '🛢️', desc: 'Konversi plastik menjadi BBM alternatif' },
+  { id: 'eco_enzyme', label: 'Eco-Enzyme', emoji: '🧴', desc: 'Fermentasi kulit buah menjadi cairan pembersih' },
+  { id: 'kerajinan', label: 'Kerajinan / Upcycling', emoji: '🎨', desc: 'Daur kreatif menjadi produk kerajinan tangan' },
+  { id: 'lainnya', label: 'Pengolahan Lainnya', emoji: '✨', desc: 'Metode pengolahan mandiri lain' }
 ];
 
 export const LOCATION_TYPES = [

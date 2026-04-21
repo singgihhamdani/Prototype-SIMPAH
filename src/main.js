@@ -21,6 +21,7 @@ import { renderInputPilah } from './pages/pwa/input-pilah.js';
 import { renderInputResidu } from './pages/pwa/input-residu.js';
 import { renderArmada } from './pages/pwa/armada.js';
 import { renderInsidental } from './pages/pwa/insidental.js';
+import { renderInputOlah } from './pages/pwa/input-olah.js';
 import { renderRiwayat } from './pages/pwa/riwayat.js';
 import { renderGIS } from './pages/dashboard/gis.js';
 import { renderEksekutif } from './pages/dashboard/eksekutif.js';
@@ -58,6 +59,7 @@ async function bootstrap() {
     registerRoute('/pwa/input-residu', () => renderInputResidu());
     registerRoute('/pwa/armada', () => renderArmada());
     registerRoute('/pwa/insidental', () => renderInsidental());
+    registerRoute('/pwa/input-olah', () => renderInputOlah());
     registerRoute('/pwa/riwayat', () => renderRiwayat());
 
     // Dashboard routes

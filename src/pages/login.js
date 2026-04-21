@@ -56,11 +56,14 @@ export function renderLogin() {
               <button class="demo-account" data-user="petugas1" data-pass="petugas123">
                 <span>🚛</span> Petugas
               </button>
+              <button class="demo-account" data-user="pengepul1" data-pass="pengepul123">
+                <span>🏪</span> Pengepul
+              </button>
               <button class="demo-account" data-user="pemdes" data-pass="pemdes123">
                 <span>🏛️</span> Pemerintah Desa
               </button>
-              <button class="demo-account" data-user="dinas" data-pass="dinas123">
-                <span>🏛️</span> Dinas
+              <button class="demo-account" style="grid-column: span 2;" data-user="dinas" data-pass="dinas123">
+                <span>🏛️</span> Dinas (Eksekutor Tetinggi)
               </button>
             </div>
           </div>

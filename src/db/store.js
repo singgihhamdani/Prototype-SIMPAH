@@ -233,15 +233,24 @@ export async function getWasteStats() {
 
   const masukWeight = records.filter(r => r.type === 'masuk').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const pilahWeight = records.filter(r => r.type === 'pilah').reduce((s, r) => s + (r.weight_kg || 0), 0);
+  const olahWeight = records.filter(r => r.type === 'olah').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const residuWeight = records.filter(r => r.type === 'residu').reduce((s, r) => s + (r.weight_kg || 0), 0);
 
-  const recycleRate = masukWeight > 0 ? ((pilahWeight / masukWeight) * 100).toFixed(1) : 0;
+  // Waste Reduction Rate = (Pilah + Olah) / Masuk × 100
+  const reductionTotal = pilahWeight + olahWeight;
+  const recycleRate = masukWeight > 0 ? ((reductionTotal / masukWeight) * 100).toFixed(1) : 0;
 
   const byCategory = {};
   records.forEach(r => {
     if (r.category_sipsn) {
       byCategory[r.category_sipsn] = (byCategory[r.category_sipsn] || 0) + (r.weight_kg || 0);
     }
+  });
+
+  // Aggregate treatment methods
+  const byTreatment = {};
+  records.filter(r => r.type === 'olah' && r.treatment_method).forEach(r => {
+    byTreatment[r.treatment_method] = (byTreatment[r.treatment_method] || 0) + (r.weight_kg || 0);
   });
 
   return {
@@ -252,9 +261,11 @@ export async function getWasteStats() {
     todayRecords: todayRecords.length,
     masukWeight,
     pilahWeight,
+    olahWeight,
     residuWeight,
     recycleRate: parseFloat(recycleRate),
     byCategory,
+    byTreatment,
     records
   };
 }

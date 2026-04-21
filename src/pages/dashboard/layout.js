@@ -21,13 +21,16 @@ export function renderDashboardLayout(title, content, activeMenu = '') {
         <nav class="sidebar-nav">
           <div class="sidebar-section">
             <div class="sidebar-section-title">Dashboard</div>
+            ${user?.role === 'dinas' ? `
             <a href="#/dashboard/eksekutif" class="sidebar-link ${activeMenu === 'eksekutif' ? 'active' : ''}">
               ${icons.chart} <span>Eksekutif</span>
             </a>
+            ` : ''}
             <a href="#/dashboard/gis" class="sidebar-link ${activeMenu === 'gis' ? 'active' : ''}">
               ${icons.map} <span>Peta GIS</span>
             </a>
           </div>
+          ${user?.role === 'dinas' ? `
           <div class="sidebar-section">
             <div class="sidebar-section-title">Pengelolaan</div>
             <a href="#/dashboard/laporan" class="sidebar-link ${activeMenu === 'laporan' ? 'active' : ''}">
@@ -43,6 +46,7 @@ export function renderDashboardLayout(title, content, activeMenu = '') {
               ${icons.shield} <span>Intervensi Desa</span>
             </a>
           </div>
+          ` : ''}
           <div class="sidebar-section">
             <div class="sidebar-section-title">Operasional</div>
             <a href="#/pwa/home" class="sidebar-link ${activeMenu === 'pwa' ? 'active' : ''}">

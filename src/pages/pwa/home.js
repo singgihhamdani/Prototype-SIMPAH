@@ -38,7 +38,7 @@ export async function renderPWAHome() {
       <div class="pwa-summary-card">
         <div class="summary-icon">${icons.recycle}</div>
         <div class="summary-value" style="color:var(--accent-500)">${stats.recycleRate}%</div>
-        <div class="summary-label">Daur Ulang</div>
+        <div class="summary-label">Pengurangan</div>
       </div>
       <div class="pwa-summary-card">
         <div class="summary-icon">${icons.activity}</div>
@@ -52,14 +52,25 @@ export async function renderPWAHome() {
       <h3 style="font-size:var(--font-base);font-weight:700">Menu Cepat</h3>
     </div>
     <div class="quick-actions page-enter stagger-2" style="animation-fill-mode:both">
+      ${['kader', 'pemdes', 'dinas'].includes(user.role) ? `
       <a href="#/pwa/input-sampah" class="quick-action-btn">
         <div class="quick-action-icon green">${icons.trashIn}</div>
         <span class="quick-action-label">Sampah Masuk</span>
       </a>
+      ` : ''}
+      ${['kader', 'pengepul', 'pemdes', 'dinas'].includes(user.role) ? `
       <a href="#/pwa/input-pilah" class="quick-action-btn">
         <div class="quick-action-icon blue">${icons.recycle}</div>
         <span class="quick-action-label">Pilah Sampah</span>
       </a>
+      ` : ''}
+      ${['kader', 'pemdes', 'dinas'].includes(user.role) ? `
+      <a href="#/pwa/input-olah" class="quick-action-btn">
+        <div class="quick-action-icon" style="background:rgba(245,158,11,0.12);color:#d97706">🔄</div>
+        <span class="quick-action-label">Olah Sampah</span>
+      </a>
+      ` : ''}
+      ${['petugas', 'pemdes', 'dinas'].includes(user.role) ? `
       <a href="#/pwa/input-residu" class="quick-action-btn">
         <div class="quick-action-icon red">${icons.residue}</div>
         <span class="quick-action-label">Residu</span>
@@ -68,10 +79,13 @@ export async function renderPWAHome() {
         <div class="quick-action-icon amber">${icons.truck}</div>
         <span class="quick-action-label">Armada</span>
       </a>
+      ` : ''}
+      ${['kader', 'pemdes', 'dinas'].includes(user.role) ? `
       <a href="#/pwa/insidental" class="quick-action-btn">
         <div class="quick-action-icon purple">${icons.alert}</div>
         <span class="quick-action-label">Insidental</span>
       </a>
+      ` : ''}
       <a href="#/pwa/riwayat" class="quick-action-btn">
         <div class="quick-action-icon teal">${icons.clock}</div>
         <span class="quick-action-label">Riwayat</span>
@@ -116,15 +130,15 @@ export async function renderPWAHome() {
 }
 
 function getTypeLabel(type) {
-  const labels = { masuk: 'Sampah Masuk', pilah: 'Sampah Terpilah', residu: 'Residu' };
+  const labels = { masuk: 'Sampah Masuk', pilah: 'Sampah Terpilah', olah: 'Olah Sampah', residu: 'Residu' };
   return labels[type] || type;
 }
 function getTypeEmoji(type) {
-  const emojis = { masuk: '📥', pilah: '♻️', residu: '🗑️' };
+  const emojis = { masuk: '📥', pilah: '♻️', olah: '🔄', residu: '🗑️' };
   return emojis[type] || '📦';
 }
 function getTypeBg(type) {
-  const bgs = { masuk: 'rgba(16,185,129,0.12)', pilah: 'rgba(59,130,246,0.12)', residu: 'rgba(239,68,68,0.12)' };
+  const bgs = { masuk: 'rgba(16,185,129,0.12)', pilah: 'rgba(59,130,246,0.12)', olah: 'rgba(245,158,11,0.12)', residu: 'rgba(239,68,68,0.12)' };
   return bgs[type] || 'rgba(107,114,128,0.12)';
 }
 function timeAgo(iso) {
