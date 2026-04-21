@@ -68,6 +68,7 @@ Panel ringkasan (*Analytics & Reporting*) berorientasi indikator KPI makro kabup
 *   **Laporan Multi-Tempo:** Grafik rekap volume sampah, residu, dan *recycling rate* secara Harian, Mingguan, Bulanan, dan Tahunan.
 *   **Export Data Terstandarisasi:** Unduh tabel tabulasi yang diformat *plek-ketiplek* sesuai kolom persyaratan SIPSN (via *CSV* atau *Excel*).
 *   **Manajemen MoU Transportasi:** Meninjau daftar armada transporter swasta, melacak nomor registrasi, serta status aktif/kadaluarsa dari perjanjian MoU.
+*   **Master Data Management (MDM):** Panel khusus CRUD bagi admin Dinas untuk mengelola dan menambah kamus entitas utama sistem secara dinamis (Daftar Lokasi TPS, Daftar Armada Kendaraan, dan Manajemen Akun Pengguna).
 
 ### 4.4. Portal Publik 
 Gerbang transparansi, partisipasi informasi, dan serap aspirasi warga.

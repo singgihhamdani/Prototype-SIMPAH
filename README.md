@@ -24,6 +24,7 @@ SIMPAH adalah platform prototype / MVP pengelolaan sampah *end-to-end* yang mens
     *   *Analytics & Charts* real-time: volume harian, laju daur ulang (*recycle rate*), dan komposisi berdasarkan kategori SIPSN.
     *   Eksport data dalam *format raw* Excel (CSV) yang serasi persis dengan format upload SIPSN Kementerian LHK.
     *   Manajemen *MoU Pipeline* untuk kepatuhan operasional angkutan / transporter swasta.
+    *   **Master Data**: Dashboard setelan untuk menambah dan mengelola titik Lokasi TPS, Armada Kendaraan, dan Akun Pengguna secara dinamis.
 
 4.  **Portal Layanan Publik**
     *   Portal aduan liar dengan GPS tracking di-enkapsulasi dengan edukasi pengelolaan limbah bagi tata rukun publik.
