@@ -47,14 +47,16 @@ export async function getWasteRecordsByDate(dateStr) {
 }
 
 export async function addWasteRecord(record, userId) {
+  const recordDate = record.override_date ? new Date(record.override_date) : new Date();
   const data = {
     ...record,
     id: record.id || generateId(),
-    created_at: new Date().toISOString(),
-    date_str: new Date().toISOString().split('T')[0],
+    created_at: recordDate.toISOString(),
+    date_str: recordDate.toISOString().split('T')[0],
     synced: false,
     verification_status: 'pending' // Anti-fraud: new records require Dinas approval
   };
+  delete data.override_date; // Clean up internal field
   await put('waste_records', data);
   await createAuditEntry('waste_records', data.id, 'create', userId, data);
   return data;

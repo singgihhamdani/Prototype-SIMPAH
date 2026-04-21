@@ -49,8 +49,9 @@ Didesain khusus untuk operasional di lapangan menggunakan perangkat *mobile* kel
 *   **Form Pencatatan Komprehensif:** 
     *   *Sampah Masuk* (Masuk ke TPS).
     *   *Sampah Terpilah* (Pemilahan berdasarkan kategori SIPSN otomatis).
+    *   *Olah Sampah / Pengolahan Mandiri* (Pencatatan sampah yang diolah mandiri menjadi produk bernilai: Pakan Ternak, Kompos, Maggot BSF, Biogas, Insinerator, Pirolisis, Eco-Enzyme, Kerajinan, dan lainnya).
     *   *Residu* (Volume yang tidak bisa diolah dan masuk TPA).
-*   **Geotagging & Lampiran:** Mengambil Lokasi GPS secara otomatis di balik layar, dilengkapi lampiran bukti foto kamera.
+*   **Input Akumulasi (Batch):** Kader di pedesaan seringkali tidak mengolah sampah setiap hari. Fitur toggle "Laporan Akumulasi" memungkinkan pengguna memasukkan total timbangan dari beberapa hari sekaligus (misal seminggu sekali), dan sistem akan **membagi rata berat per hari secara otomatis ke belakang** sehingga grafik dasbor Dinas tetap mulus tanpa lonjakan palsu (*false spike*).
 *   **Insidental Form:** Menu khusus penjadwalan kegiatan insidental (Misal: kerja bakti RT, pembersihan khusus, edukasi, lainnya).
 *   **Validasi Armada & MoU:** Fitur mencantumkan pelat nomor/kode kendaraan pada saat pembuangan ke TPA guna validasi MoU transportasi (mencegah pembuang luar kawasan/liar).
 

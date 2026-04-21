@@ -10,7 +10,8 @@ SIMPAH adalah platform prototype / MVP pengelolaan sampah *end-to-end* yang mens
 1.  **PWA Modul Lapangan (Offline-First)**
     *   Bisa diinstal sebagai aplikasi *Mobile* di layar utama *smartphone*.
     *   *Data Sync*: Data dapat direkam tanpa sinyal internet, lalu akan diunggah (tersinkronisasi) otomatis ketika *online*.
-    *   Rekam sampah masuk, pemilahan, dan residu super cepat (< 10 detik).
+    *   Rekam sampah masuk, pemilahan, pengolahan mandiri (kompos/pakan ternak/pirolisis), dan residu super cepat (< 10 detik).
+    *   **Input Akumulasi (Batch):** Kader bisa mencatat timbangan total seminggu sekaligus — sistem **membagi rata berat otomatis per hari** ke belakang agar grafik Dinas tetap mulus.
     *   *Geotagging* otomatis dan lampiran foto untuk jejak audit.
 
 2.  **Dashboard GIS (Peta Interaktif)**

@@ -55,6 +55,28 @@ export async function renderInputSampah() {
           </div>
         </div>
 
+        <div class="accumulation-toggle">
+          <label class="accum-label">
+            <input type="checkbox" id="accumToggle" />
+            <span class="accum-switch"></span>
+            <span>Ini laporan akumulasi beberapa hari</span>
+          </label>
+          <div class="accum-panel" id="accumPanel" style="display:none">
+            <p class="accum-hint">Berapa hari sampah ini dikumpulkan sebelum ditimbang?</p>
+            <div class="accum-days-row">
+              <button type="button" class="accum-day-btn" data-days="3">3 hari</button>
+              <button type="button" class="accum-day-btn" data-days="5">5 hari</button>
+              <button type="button" class="accum-day-btn selected" data-days="7">7 hari</button>
+              <button type="button" class="accum-day-btn" data-days="14">14 hari</button>
+            </div>
+            <div class="accum-custom">
+              <span>atau</span>
+              <input type="number" id="accumCustomDays" class="form-input" placeholder="Jumlah hari" min="2" max="30" style="width:120px" />
+            </div>
+            <div class="accum-preview" id="accumPreview"></div>
+          </div>
+        </div>
+
         <!-- Location -->
         <div class="form-group">
           <label class="form-label">Lokasi TPS/TPS3R</label>
@@ -88,6 +110,22 @@ export async function renderInputSampah() {
         </button>
       </form>
     </div>
+    <style>
+      .accumulation-toggle { margin-bottom:var(--space-4); }
+      .accum-label { display:flex; align-items:center; gap:var(--space-3); cursor:pointer; font-size:var(--font-sm); font-weight:500; }
+      .accum-label input { display:none; }
+      .accum-switch { width:40px; height:22px; border-radius:11px; background:var(--gray-300); position:relative; transition:all 0.2s; flex-shrink:0; }
+      .accum-switch::after { content:''; width:18px; height:18px; border-radius:50%; background:#fff; position:absolute; top:2px; left:2px; transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+      .accum-label input:checked + .accum-switch { background:var(--primary-500); }
+      .accum-label input:checked + .accum-switch::after { left:20px; }
+      .accum-panel { margin-top:var(--space-3); padding:var(--space-4); border-radius:var(--radius-lg); background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.15); animation:scaleIn 0.2s ease; }
+      .accum-hint { font-size:var(--font-xs); color:var(--text-secondary); margin-bottom:var(--space-3); }
+      .accum-days-row { display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom:var(--space-3); }
+      .accum-day-btn { padding:var(--space-2) var(--space-4); border-radius:var(--radius-full); border:1px solid var(--border-color); background:transparent; font-size:var(--font-sm); font-weight:500; cursor:pointer; transition:all 0.15s; color:var(--text-primary); }
+      .accum-day-btn.selected { background:var(--primary-500); color:#fff; border-color:var(--primary-500); }
+      .accum-custom { display:flex; align-items:center; gap:var(--space-3); font-size:var(--font-xs); color:var(--text-muted); }
+      .accum-preview { margin-top:var(--space-3); padding:var(--space-3); border-radius:var(--radius-md); background:rgba(16,185,129,0.1); font-size:var(--font-xs); color:var(--primary-700, #047857); text-align:center; font-weight:600; }
+    </style>
   `);
 
   // Init photo picker
@@ -109,6 +147,46 @@ export async function renderInputSampah() {
       btn.classList.add('active');
     });
   });
+
+  // Accumulation toggle
+  const accumToggle = document.getElementById('accumToggle');
+  const accumPanel = document.getElementById('accumPanel');
+  accumToggle?.addEventListener('change', () => {
+    accumPanel.style.display = accumToggle.checked ? 'block' : 'none';
+    updateAccumPreview();
+  });
+  document.querySelectorAll('.accum-day-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.accum-day-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('accumCustomDays').value = '';
+      updateAccumPreview();
+    });
+  });
+  document.getElementById('accumCustomDays')?.addEventListener('input', () => {
+    document.querySelectorAll('.accum-day-btn').forEach(b => b.classList.remove('selected'));
+    updateAccumPreview();
+  });
+  document.getElementById('weightInput')?.addEventListener('input', updateAccumPreview);
+
+  function getSelectedAccumDays() {
+    const custom = parseInt(document.getElementById('accumCustomDays')?.value);
+    if (custom >= 2) return custom;
+    const selected = document.querySelector('.accum-day-btn.selected');
+    return selected ? parseInt(selected.dataset.days) : 7;
+  }
+  function updateAccumPreview() {
+    const preview = document.getElementById('accumPreview');
+    if (!preview) return;
+    const w = parseFloat(document.getElementById('weightInput')?.value) || 0;
+    const unit = document.querySelector('.weight-unit-btn.active')?.dataset.unit || 'kg';
+    const wKg = unit === 'ton' ? w * 1000 : w;
+    const days = getSelectedAccumDays();
+    if (wKg > 0 && days > 1) {
+      preview.innerHTML = `📊 Sistem akan mencatat <strong>${(wKg / days).toFixed(1)} kg/hari</strong> selama ${days} hari ke belakang`;
+      preview.style.display = 'block';
+    } else { preview.style.display = 'none'; }
+  }
 
   // Wire up form submission
   document.getElementById('wasteForm').addEventListener('submit', async (e) => {
@@ -157,7 +235,28 @@ export async function renderInputSampah() {
     submitBtn.disabled = true;
 
     try {
-      await addWasteRecord(record, user.id);
+      const isAccum = document.getElementById('accumToggle').checked;
+      const accumDays = isAccum ? getSelectedAccumDays() : 1;
+
+      if (accumDays > 1) {
+        const dailyWeight = parseFloat((weightKg / accumDays).toFixed(1));
+        const now = new Date();
+        for (let d = 0; d < accumDays; d++) {
+          const backDate = new Date(now);
+          backDate.setDate(backDate.getDate() - d);
+          await addWasteRecord({
+            ...record,
+            weight_kg: dailyWeight,
+            notes: record.notes + (d === 0 ? '' : ` [Akumulasi hari ke-${accumDays - d}/${accumDays}]`),
+            is_accumulation: true,
+            accumulation_days: accumDays,
+            accumulation_total_kg: weightKg,
+            override_date: backDate.toISOString()
+          }, user.id);
+        }
+      } else {
+        await addWasteRecord(record, user.id);
+      }
       showToast('Data sampah masuk berhasil disimpan!', 'success', 'Tersimpan');
       setTimeout(() => { window.location.hash = '#/pwa/home'; }, 800);
     } catch (err) {
