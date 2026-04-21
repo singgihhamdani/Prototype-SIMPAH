@@ -25,9 +25,11 @@ SIMPAH adalah platform prototype / MVP pengelolaan sampah *end-to-end* yang mens
     *   Eksport data dalam *format raw* Excel (CSV) yang serasi persis dengan format upload SIPSN Kementerian LHK.
     *   Manajemen *MoU Pipeline* untuk kepatuhan operasional angkutan / transporter swasta.
     *   **Master Data**: Dashboard setelan untuk menambah dan mengelola titik Lokasi TPS, Armada Kendaraan, dan Akun Pengguna secara dinamis.
+    *   **Manajemen Aduan Warga**: Panel untuk merespon dan menindaklanjuti keluhan masyarakat yang masuk dari portal publik.
 
 4.  **Portal Layanan Publik**
     *   Portal aduan liar dengan GPS tracking di-enkapsulasi dengan edukasi pengelolaan limbah bagi tata rukun publik.
+    *   **Sistem Nomor Resi**: Warga mendapatkan *tracking number* otomatis untuk memonitor progres penyelesaian aduan mereka secara publik dan transparan.
 
 ---
 
