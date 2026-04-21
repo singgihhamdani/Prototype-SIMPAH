@@ -109,7 +109,7 @@ async function initMap(locations, records) {
   Object.entries(markerColors).forEach(([type, color]) => {
     markerIcons[type] = L.divIcon({
       className: 'custom-marker',
-      html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:bold">${LOCATION_TYPES.find(l=>l.id===type)?.icon||'📍'}</div>`,
+      html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:bold">${LOCATION_TYPES.find(l=>l.id===type)?.label?.charAt(0)||'T'}</div>`,
       iconSize: [28, 28],
       iconAnchor: [14, 14],
       popupAnchor: [0, -14]

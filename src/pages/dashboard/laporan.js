@@ -130,7 +130,7 @@ function renderReportRows(records) {
       <td>${r.user_name || '-'}</td>
       <td style="text-align:center">
         ${r.photo_count > 0
-          ? `<span class="badge badge-info" style="cursor:pointer" title="${r.photo_count} foto terlampir">📷 ${r.photo_count}</span>`
+          ? `<span class="badge badge-info" style="cursor:pointer" title="${r.photo_count} foto terlampir">${icons.camera} ${r.photo_count}</span>`
           : '<span style="color:var(--text-muted)">-</span>'
         }
       </td>

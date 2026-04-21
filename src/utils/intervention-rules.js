@@ -30,7 +30,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'A-01',
     group: 'Timbulan & Volume',
-    groupIcon: '📊',
+    groupIcon: 'chart',
     urgency: 'kritis',
     pic: 'Dinas + Desa',
     horizon: 'Segera',
@@ -41,7 +41,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'A-02',
     group: 'Timbulan & Volume',
-    groupIcon: '📊',
+    groupIcon: 'chart',
     urgency: 'perhatian',
     pic: 'Desa',
     horizon: 'Pendek (1–3 bulan)',
@@ -52,7 +52,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'A-03',
     group: 'Timbulan & Volume',
-    groupIcon: '📊',
+    groupIcon: 'chart',
     urgency: 'perhatian',
     pic: 'Dinas',
     horizon: 'Segera',
@@ -63,7 +63,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'A-04',
     group: 'Timbulan & Volume',
-    groupIcon: '📊',
+    groupIcon: 'chart',
     urgency: 'kritis',
     pic: 'Dinas + Desa',
     horizon: 'Menengah (3–12 bulan)',
@@ -76,7 +76,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'B-01',
     group: 'Pemilahan & Daur Ulang',
-    groupIcon: '♻️',
+    groupIcon: 'recycle',
     urgency: 'kritis',
     pic: 'Dinas + Desa',
     horizon: 'Pendek (1–3 bulan)',
@@ -87,7 +87,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'B-02',
     group: 'Pemilahan & Daur Ulang',
-    groupIcon: '♻️',
+    groupIcon: 'recycle',
     urgency: 'perhatian',
     pic: 'Desa',
     horizon: 'Pendek (1–3 bulan)',
@@ -98,7 +98,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'B-03',
     group: 'Pemilahan & Daur Ulang',
-    groupIcon: '♻️',
+    groupIcon: 'recycle',
     urgency: 'perhatian',
     pic: 'Desa',
     horizon: 'Segera',
@@ -111,7 +111,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'C-01',
     group: 'Residu & TPA',
-    groupIcon: '🗑️',
+    groupIcon: 'trash',
     urgency: 'kritis',
     pic: 'Dinas',
     horizon: 'Pendek (1–3 bulan)',
@@ -122,7 +122,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'C-02',
     group: 'Residu & TPA',
-    groupIcon: '🗑️',
+    groupIcon: 'trash',
     urgency: 'perhatian',
     pic: 'Desa + Dinas',
     horizon: 'Menengah (3–12 bulan)',
@@ -135,7 +135,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'D-01',
     group: 'Infrastruktur & Layanan',
-    groupIcon: '🏗️',
+    groupIcon: 'construction',
     urgency: 'kritis',
     pic: 'Dinas',
     horizon: 'Segera',
@@ -146,7 +146,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'D-02',
     group: 'Infrastruktur & Layanan',
-    groupIcon: '🏗️',
+    groupIcon: 'construction',
     urgency: 'perhatian',
     pic: 'Dinas + Desa',
     horizon: 'Menengah (3–12 bulan)',
@@ -159,7 +159,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'E-01',
     group: 'Aduan Masyarakat',
-    groupIcon: '📢',
+    groupIcon: 'megaphone',
     urgency: 'kritis',
     pic: 'Dinas',
     horizon: 'Segera',
@@ -170,7 +170,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'E-02',
     group: 'Aduan Masyarakat',
-    groupIcon: '📢',
+    groupIcon: 'megaphone',
     urgency: 'perhatian',
     pic: 'Dinas',
     horizon: 'Segera',
@@ -181,7 +181,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'E-03',
     group: 'Aduan Masyarakat',
-    groupIcon: '📢',
+    groupIcon: 'megaphone',
     urgency: 'kritis',
     pic: 'Dinas',
     horizon: 'Segera',
@@ -194,7 +194,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'F-01',
     group: 'Kapasitas Kelembagaan',
-    groupIcon: '🏛️',
+    groupIcon: 'landmark',
     urgency: 'perhatian',
     pic: 'Dinas',
     horizon: 'Pendek (1–3 bulan)',
@@ -207,7 +207,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'G-01',
     group: 'Kepatuhan & Audit',
-    groupIcon: '🔍',
+    groupIcon: 'search',
     urgency: 'perhatian',
     pic: 'Dinas',
     horizon: 'Pendek (1–3 bulan)',
@@ -218,7 +218,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'G-02',
     group: 'Kepatuhan & Audit',
-    groupIcon: '🔍',
+    groupIcon: 'search',
     urgency: 'perhatian',
     pic: 'Dinas',
     horizon: 'Pendek (1–3 bulan)',
@@ -231,7 +231,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'H-01',
     group: 'Komparatif & Potensi',
-    groupIcon: '📈',
+    groupIcon: 'trendUp',
     urgency: 'kritis',
     pic: 'Dinas',
     horizon: 'Menengah (3–12 bulan)',
@@ -242,7 +242,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'H-02',
     group: 'Komparatif & Potensi',
-    groupIcon: '📈',
+    groupIcon: 'trendUp',
     urgency: 'pengembangan',
     pic: 'Dinas',
     horizon: 'Panjang (> 1 tahun)',
@@ -253,7 +253,7 @@ export const INTERVENTION_RULES = [
   {
     id: 'H-03',
     group: 'Komparatif & Potensi',
-    groupIcon: '📈',
+    groupIcon: 'trendUp',
     urgency: 'pengembangan',
     pic: 'Desa + Pemdes',
     horizon: 'Menengah (3–12 bulan)',

@@ -50,7 +50,7 @@ export function renderEdukasi() {
             ${ARTICLES.map((a, i) => `
               <div class="portal-card" style="animation:fadeInUp 0.4s ease ${i*0.08}s both;cursor:pointer">
                 <div class="portal-card-image" style="background:linear-gradient(135deg, ${a.color}22, ${a.color}44);display:flex;align-items:center;justify-content:center;font-size:48px">
-                  ${{Pemilahan:'♻️',['Daur Ulang']:'🔄',Kompos:'🌱',Regulasi:'📋','3R':'🌍',TPS3R:'🏭'}[a.category] || '📖'}
+                  ${{Pemilahan: icons.recycle, ['Daur Ulang']: icons.refreshCw, Kompos: icons.leaf, Regulasi: icons.clipboard, '3R': icons.globe, TPS3R: icons.factory}[a.category] || icons.book}
                 </div>
                 <div class="portal-card-body">
                   <span class="portal-card-tag" style="background:${a.color}15;color:${a.color}">${a.category}</span>

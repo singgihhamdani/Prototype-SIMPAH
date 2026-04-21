@@ -42,18 +42,25 @@ export async function renderInputPilah() {
           <label class="form-label">Input Berat per Kategori (kg)</label>
           <div class="pilah-categories" id="pilahCategories">
             ${SIPSN_CATEGORIES.map(cat => `
-              <div class="pilah-row">
-                <span class="pilah-emoji">${cat.emoji}</span>
-                <span class="pilah-name">${cat.name}</span>
-                <input type="number" class="form-input pilah-input" data-code="${cat.code}" placeholder="0" step="0.1" min="0" inputmode="decimal" />
-                <span class="pilah-unit">kg</span>
+              <div class="pilah-card">
+                <div class="pilah-card-header">
+                  <span class="pilah-icon" style="color:${cat.color}">${cat.icon}</span>
+                  <span class="pilah-name">${cat.name}</span>
+                </div>
+                <div class="pilah-card-controls">
+                  <button type="button" class="pilah-btn min-btn" data-code="${cat.code}">-</button>
+                  <input type="number" class="form-input pilah-input" id="input-${cat.code}" data-code="${cat.code}" value="0" step="0.5" min="0" inputmode="decimal" />
+                  <span class="pilah-unit">KG</span>
+                  <button type="button" class="pilah-btn plus-btn" data-code="${cat.code}">+</button>
+                </div>
               </div>
             `).join('')}
           </div>
         </div>
 
         <div class="pilah-total" id="pilahTotal">
-          Total: <strong>0 kg</strong>
+          <span>Total Berat:</span>
+          <strong>0 <small>KG</small></strong>
         </div>
 
         <div class="form-group">
@@ -70,22 +77,47 @@ export async function renderInputPilah() {
       </form>
     </div>
     <style>
-      .pilah-categories { display:flex; flex-direction:column; gap:var(--space-2); }
-      .pilah-row { display:flex; align-items:center; gap:var(--space-3); padding:var(--space-2) 0; border-bottom:1px solid var(--border-color); }
-      .pilah-emoji { font-size:20px; width:28px; text-align:center; }
-      .pilah-name { flex:1; font-size:var(--font-sm); font-weight:500; }
-      .pilah-input { width:80px !important; text-align:right; padding:var(--space-2) var(--space-3) !important; }
-      .pilah-unit { font-size:var(--font-sm); color:var(--text-muted); width:24px; }
-      .pilah-total { text-align:right; padding:var(--space-4) 0; font-size:var(--font-lg); color:var(--primary-600); border-top:2px solid var(--primary-200); margin-bottom:var(--space-5); }
+      .pilah-categories { display:flex; flex-direction:column; gap:var(--space-3); }
+      .pilah-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius-xl); padding:var(--space-3) var(--space-4); display:flex; flex-direction:column; gap:var(--space-3); }
+      .pilah-card-header { display:flex; align-items:center; gap:var(--space-3); }
+      .pilah-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:#fff; border-radius:var(--radius-lg); box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+      .pilah-name { flex:1; font-size:var(--font-base); font-weight:700; color:var(--text-primary); }
+      .pilah-card-controls { display:flex; align-items:center; justify-content:space-between; gap:var(--space-2); background:#fff; padding:6px; border-radius:var(--radius-lg); border:1px solid var(--border-color); }
+      .pilah-btn { width:48px; height:48px; border-radius:var(--radius-md); border:none; background:var(--gray-100); color:var(--text-secondary); font-size:24px; font-weight:500; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+      .pilah-btn:active { background:var(--primary-100); color:var(--primary-600); transform:scale(0.95); }
+      .pilah-input { flex:1; border:none !important; text-align:center !important; font-size:24px !important; font-weight:800 !important; padding:4px !important; background:transparent !important; color:var(--primary-600) !important; box-shadow:none !important; }
+      .pilah-input:focus { outline:none; }
+      .pilah-unit { font-size:var(--font-xs); color:var(--text-muted); font-weight:800; padding-right:8px; }
+      .pilah-total { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; font-size:20px; color:var(--primary-700); background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.2)); border:1px solid rgba(16,185,129,0.3); border-radius:var(--radius-xl); margin-bottom:var(--space-5); text-transform:uppercase; font-weight:600; }
+      .pilah-total strong { font-size:28px; font-weight:900; }
+      .pilah-total small { font-size:14px; opacity:0.8; }
     </style>
   `);
 
   // Init photo picker
   photoPicker = initPhotoPicker('pilah');
 
+  // Plus Minus Controls
+  document.querySelectorAll('.pilah-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isPlus = btn.classList.contains('plus-btn');
+      const code = btn.dataset.code;
+      const input = document.getElementById(`input-\${code}`);
+      let val = parseFloat(input.value) || 0;
+      if (isPlus) { val += 1; } 
+      else if (val >= 1) { val -= 1; }
+      else { val = 0; }
+      input.value = val;
+      updateTotal();
+    });
+  });
+
   // Update total
   document.querySelectorAll('.pilah-input').forEach(input => {
     input.addEventListener('input', updateTotal);
+    // Auto clear 0 on focus
+    input.addEventListener('focus', () => { if (input.value === '0') input.value = ''; });
+    input.addEventListener('blur', () => { if (input.value === '') input.value = '0'; });
   });
 
   function updateTotal() {
@@ -93,7 +125,7 @@ export async function renderInputPilah() {
     document.querySelectorAll('.pilah-input').forEach(i => {
       total += parseFloat(i.value) || 0;
     });
-    document.getElementById('pilahTotal').innerHTML = `Total: <strong>${total.toFixed(1)} kg</strong>`;
+    document.getElementById('pilahTotal').innerHTML = `<span>Total Berat:</span><strong>${total.toFixed(1)} <small>KG</small></strong>`;
   }
 
   // Submit

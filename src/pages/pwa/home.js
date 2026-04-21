@@ -14,7 +14,8 @@ export async function renderPWAHome() {
     <!-- Greeting -->
     <div class="pwa-greeting page-enter">
       <div class="greeting-text">
-        <h2>Halo, ${user.name.split(' ')[0]}! 👋</h2>
+        <h2>Halo, ${user.name.split(' ')[0]}!</h2>
+        <p style="font-size:12px;color:var(--primary-600);font-weight:600;margin:2px 0 4px">${getMotivationalGreeting()}</p>
         <p>${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
       </div>
       <div class="sync-status ${navigator.onLine ? 'online' : 'offline'}" id="syncIndicator">
@@ -66,7 +67,7 @@ export async function renderPWAHome() {
       ` : ''}
       ${['kader', 'pemdes', 'dinas'].includes(user.role) ? `
       <a href="#/pwa/input-olah" class="quick-action-btn">
-        <div class="quick-action-icon" style="background:rgba(245,158,11,0.12);color:#d97706">🔄</div>
+        <div class="quick-action-icon" style="background:rgba(245,158,11,0.12);color:#d97706">${icons.refreshCw}</div>
         <span class="quick-action-label">Olah Sampah</span>
       </a>
       ` : ''}
@@ -107,9 +108,9 @@ export async function renderPWAHome() {
             <div class="record-title">${getTypeLabel(r.type)} - ${r.category_sipsn || '-'}</div>
             <div class="record-meta">${r.location_name || '-'} · ${timeAgo(r.created_at)}</div>
           </div>
-          <div class="record-value">
-            ${formatWeight(r.weight_kg)}
-            ${!r.synced ? '<br><span class="badge badge-warning" style="font-size:9px">Pending</span>' : ''}
+          <div class="record-value" style="display:flex;flex-direction:column;align-items:flex-end">
+            <span style="font-size:var(--font-base);font-weight:700;color:var(--text-primary)">${formatWeight(r.weight_kg)}</span>
+            ${getVerificationBadge(r)}
           </div>
         </div>
       `).join('')}
@@ -134,8 +135,8 @@ function getTypeLabel(type) {
   return labels[type] || type;
 }
 function getTypeEmoji(type) {
-  const emojis = { masuk: '📥', pilah: '♻️', olah: '🔄', residu: '🗑️' };
-  return emojis[type] || '📦';
+  const typeIcons = { masuk: icons.download, pilah: icons.layers, olah: icons.activity, residu: icons.trash };
+  return typeIcons[type] || icons.box;
 }
 function getTypeBg(type) {
   const bgs = { masuk: 'rgba(16,185,129,0.12)', pilah: 'rgba(59,130,246,0.12)', olah: 'rgba(245,158,11,0.12)', residu: 'rgba(239,68,68,0.12)' };
@@ -148,4 +149,22 @@ function timeAgo(iso) {
   if (mins < 60) return `${mins}m lalu`;
   if (hrs < 24) return `${hrs}j lalu`;
   return `${days}h lalu`;
+}
+
+function getVerificationBadge(r) {
+  if (!r.synced) return '<span class="badge badge-warning" style="font-size:9px;margin-top:4px">Sinkronisasi...</span>';
+  if (!r.verification_status || r.verification_status === 'approved') return '<span class="badge badge-success" style="font-size:9px;margin-top:4px">Disetujui</span>';
+  if (r.verification_status === 'rejected') return '<span class="badge badge-danger" style="font-size:9px;margin-top:4px">Ditolak</span>';
+  return '<span class="badge" style="background:#fef08a;color:#854d0e;font-size:9px;margin-top:4px">Tunggu Validasi</span>';
+}
+
+function getMotivationalGreeting() {
+  const greetings = [
+    "Hebat! Mari kita selamatkan bumi hari ini 🌱",
+    "Bumi berterima kasih atas kerjamu 🌍",
+    "Aksi kecil untuk masa depan yang resik ✨",
+    "Keringatmu bernilai emas bagi lingkungan 🥇",
+    "Semangat berlaga pahlawan lingkungan! 🦸‍♂️"
+  ];
+  return greetings[Math.floor(Math.random() * greetings.length)];
 }

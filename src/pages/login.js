@@ -51,19 +51,19 @@ export function renderLogin() {
             <p>Demo Akun:</p>
             <div class="demo-accounts">
               <button class="demo-account" data-user="kader1" data-pass="kader123">
-                <span>🌿</span> Kader
+                <span>${icons.leaf}</span> Kader
               </button>
               <button class="demo-account" data-user="petugas1" data-pass="petugas123">
-                <span>🚛</span> Petugas
+                <span>${icons.truck}</span> Petugas
               </button>
               <button class="demo-account" data-user="pengepul1" data-pass="pengepul123">
-                <span>🏪</span> Pengepul
+                <span>${icons.store}</span> Pengepul
               </button>
               <button class="demo-account" data-user="pemdes" data-pass="pemdes123">
-                <span>🏛️</span> Pemerintah Desa
+                <span>${icons.landmark}</span> Pemerintah Desa
               </button>
               <button class="demo-account" style="grid-column: span 2;" data-user="dinas" data-pass="dinas123">
-                <span>🏛️</span> Dinas (Eksekutor Tetinggi)
+                <span>${icons.landmark}</span> Dinas (Eksekutor Tetinggi)
               </button>
             </div>
           </div>

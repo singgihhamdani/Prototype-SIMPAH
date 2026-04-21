@@ -50,7 +50,7 @@ export async function renderMou() {
                 <p style="font-size:var(--font-sm);color:var(--text-secondary)">${m.contract_number}</p>
               </div>
               <span class="badge ${m.status === 'active' ? 'badge-success' : m.status === 'expiring' ? 'badge-warning' : 'badge-danger'}">
-                ${m.status === 'active' ? '✓ Aktif' : m.status === 'expiring' ? '⚠ Segera Habis' : '✗ Kadaluarsa'}
+                ${m.status === 'active' ? `${icons.checkCircle} Aktif` : m.status === 'expiring' ? `${icons.alert} Segera Habis` : `${icons.xCircle} Kadaluarsa`}
               </span>
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-4);margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--border-color)">

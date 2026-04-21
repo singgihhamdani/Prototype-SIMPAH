@@ -15,7 +15,7 @@ export async function renderPortalBeranda() {
       <section class="portal-hero">
         <div class="portal-hero-content">
           <div class="portal-hero-badge">
-            <span style="font-size:14px">🌿</span> Kabupaten Banjarnegara
+            <span style="font-size:14px">${icons.leaf}</span> Kabupaten Banjarnegara
           </div>
           <h1>
             Bersama Wujudkan<br>

@@ -46,10 +46,10 @@ export function renderDashboardLayout(title, content, activeMenu = '') {
               ${icons.shield} <span>Intervensi Desa</span>
             </a>
             <a href="#/dashboard/aduan" class="sidebar-link ${activeMenu === 'aduan' ? 'active' : ''}">
-              ${icons.messageCircle || '📋'} <span>Aduan Warga</span>
+              ${icons.messageCircle} <span>Aduan Warga</span>
             </a>
             <a href="#/dashboard/masterdata" class="sidebar-link ${activeMenu === 'masterdata' ? 'active' : ''}">
-              ${icons.settings || '⚙️'} <span>Master Data</span>
+              ${icons.settings} <span>Master Data</span>
             </a>
           </div>
           ` : ''}

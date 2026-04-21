@@ -33,11 +33,12 @@ function renderView() {
 
   renderDashboardLayout('Validasi Data', `
     <div class="page-enter">
-      <div class="section-header">
+      <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end">
         <div>
           <h2 class="section-title">Antrean Validasi (Anti-Fraud)</h2>
           <p class="section-subtitle">Tinjau dan setujui input data sampah dari kader lapangan sebelum masuk ke SIPSN</p>
         </div>
+        ${pendingRecords.length > 0 ? `<button class="btn btn-primary" id="approveAllBtn" style="background:var(--primary-600);border-color:var(--primary-600);white-space:nowrap">${icons.checkCircle} Setujui Semua (${pendingRecords.length})</button>` : ''}
       </div>
 
       <!-- Stats -->
@@ -64,7 +65,7 @@ function renderView() {
         <div class="table-container" style="border:none">
           ${pendingRecords.length === 0 
             ? `<div style="text-align:center;padding:var(--space-8);color:var(--text-muted)">
-                 <div style="font-size:2rem;margin-bottom:var(--space-3)">🎉</div>
+                 <div style="font-size:2rem;margin-bottom:var(--space-3);color:var(--primary-500)">${icons.award}</div>
                  <p>Tidak ada data antrean. Seluruh data telah tervalidasi.</p>
                </div>`
             : `
@@ -93,7 +94,7 @@ function renderView() {
                     </td>
                     <td>
                       <div><strong>${r.location_name || '-'}</strong></div>
-                      ${r.lat ? `<div style="font-size:10px;color:var(--primary-500)">📍 ${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}</div>` : ''}
+                      ${r.lat ? `<div style="font-size:10px;color:var(--primary-500)">${icons.mapPin} ${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}</div>` : ''}
                     </td>
                     <td>
                       <span class="badge ${r.type==='masuk'?'badge-success':r.type==='pilah'?'badge-primary':'badge-danger'}">
@@ -111,8 +112,8 @@ function renderView() {
                         : '<span style="font-size:10px;color:var(--text-muted)">Tidak ada foto</span>'}
                     </td>
                     <td style="text-align:center;white-space:nowrap;">
-                      <button class="btn btn-sm btn-icon" style="color:#ef4444;background:rgba(239,68,68,0.1)" title="Tolak Data" data-action="reject" data-id="${r.id}">✖</button>
-                      <button class="btn btn-sm btn-icon" style="color:#10b981;background:rgba(16,185,129,0.1);margin-left:4px" title="Setujui Data" data-action="approve" data-id="${r.id}">✓</button>
+                      <button class="btn btn-sm btn-icon" style="color:#ef4444;background:rgba(239,68,68,0.1)" title="Tolak Data" data-action="reject" data-id="${r.id}">${icons.xCircle}</button>
+                      <button class="btn btn-sm btn-icon" style="color:#10b981;background:rgba(16,185,129,0.1);margin-left:4px" title="Setujui Data" data-action="approve" data-id="${r.id}">${icons.checkCircle}</button>
                     </td>
                   </tr>
                 `).join('')}
@@ -138,6 +139,30 @@ function renderView() {
       }
     });
   });
+
+  // Bind Approve All
+  const approveAllBtn = document.getElementById('approveAllBtn');
+  if (approveAllBtn) {
+    approveAllBtn.addEventListener('click', async () => {
+      if (confirm(`Apakah Anda yakin ingin menyetujui ${pendingRecords.length} data sekaligus? Tindakan ini akan mengesahkan data ke sistem SIPSN.`)) {
+        approveAllBtn.innerHTML = '<div class="spinner" style="margin:0 auto"></div>';
+        approveAllBtn.disabled = true;
+        try {
+          const user = getCurrentUser();
+          const promises = pendingRecords.map(r => updateWasteRecordStatus(r.id, 'approved', '', user.id));
+          await Promise.all(promises);
+          showToast(`${pendingRecords.length} data pahlawan lingkungan berhasil disetujui!`, 'success');
+          pendingRecords = [];
+          const countEl = document.getElementById('statPending');
+          if (countEl) countEl.innerText = 0;
+          renderValidasi();
+        } catch (e) {
+          showToast('Gagal menyetujui data massal', 'error');
+          renderValidasi();
+        }
+      }
+    });
+  }
 }
 
 async function handleAction(id, action, notes = '') {

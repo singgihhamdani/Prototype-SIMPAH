@@ -25,7 +25,7 @@ export async function renderInsidental() {
             <div class="category-grid" style="grid-template-columns:repeat(2,1fr)" id="eventTypeGrid">
               ${INCIDENTAL_TYPES.map(t => `
                 <div class="category-chip" data-type="${t.id}">
-                  <span class="category-emoji">${t.emoji}</span>
+                  <span class="category-emoji">${t.icon}</span>
                   <span>${t.label}</span>
                 </div>
               `).join('')}
@@ -58,7 +58,7 @@ export async function renderInsidental() {
         <div class="record-list">
           ${events.map(e => `
             <div class="record-item">
-              <div class="record-icon" style="background:rgba(139,92,246,0.12)">${INCIDENTAL_TYPES.find(t=>t.id===e.type)?.emoji || '📌'}</div>
+              <div class="record-icon" style="background:rgba(139,92,246,0.12)">${INCIDENTAL_TYPES.find(t=>t.id===e.type)?.icon || icons.box}</div>
               <div class="record-info">
                 <div class="record-title">${e.title}</div>
                 <div class="record-meta">${e.location_name || '-'} · ${formatDateTime(e.created_at)}</div>

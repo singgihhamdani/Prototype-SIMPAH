@@ -108,9 +108,9 @@ function renderRankingView() {
                   }
                 </td>
                 <td style="font-size:12px">
-                  ${v.tps3r_count > 0 ? `<span class="badge badge-success" style="margin:1px">♻️ ${v.tps3r_count}</span>` : ''}
-                  ${v.tps_count > 0 ? `<span class="badge badge-info" style="margin:1px">📍 ${v.tps_count}</span>` : ''}
-                  ${v.bank_sampah_count > 0 ? `<span class="badge badge-neutral" style="margin:1px">🏦 ${v.bank_sampah_count}</span>` : ''}
+                  ${v.tps3r_count > 0 ? `<span class="badge badge-success" style="margin:1px">${icons.recycle} ${v.tps3r_count}</span>` : ''}
+                  ${v.tps_count > 0 ? `<span class="badge badge-info" style="margin:1px">${icons.mapPin} ${v.tps_count}</span>` : ''}
+                  ${v.bank_sampah_count > 0 ? `<span class="badge badge-neutral" style="margin:1px">${icons.landmark} ${v.bank_sampah_count}</span>` : ''}
                   ${v.total_infrastruktur === 0 ? '<span class="badge badge-danger">Tidak ada</span>' : ''}
                 </td>
                 <td>
@@ -236,7 +236,7 @@ function renderProfilView() {
           <div class="profil-summary-item">
             <span style="color:var(--text-muted);font-size:12px">Tren 3 Bulan</span>
             <strong style="color:${v.tren_3_bulan === 'naik' ? '#ef4444' : v.tren_3_bulan === 'turun' ? '#10b981' : '#f59e0b'}">
-              ${v.tren_3_bulan === 'naik' ? '📈 Naik' : v.tren_3_bulan === 'turun' ? '📉 Turun' : '➡️ Stabil'}
+              ${v.tren_3_bulan === 'naik' ? `${icons.trendUp} Naik` : v.tren_3_bulan === 'turun' ? `${icons.trendDown} Turun` : `${icons.arrowRight} Stabil`}
             </strong>
           </div>
         </div>
@@ -299,7 +299,7 @@ function renderProfilView() {
         ${recsKritis.length > 0 ? `
         <div class="recs-group">
           <div class="recs-group-header" style="border-left-color:#ef4444">
-            <span>🔴 Kritis — Perlu Tindakan Segera</span>
+            <span><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="6" fill="#ef4444"/></svg> Kritis — Perlu Tindakan Segera</span>
             <span class="recs-count">${recsKritis.length}</span>
           </div>
           ${recsKritis.map((r, i) => renderRecItem(r, i, 'kritis')).join('')}
@@ -308,7 +308,7 @@ function renderProfilView() {
         ${recsPerhatian.length > 0 ? `
         <div class="recs-group">
           <div class="recs-group-header" style="border-left-color:#f59e0b">
-            <span>🟡 Perlu Perhatian</span>
+            <span><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="6" fill="#f59e0b"/></svg> Perlu Perhatian</span>
             <span class="recs-count">${recsPerhatian.length}</span>
           </div>
           ${recsPerhatian.map((r, i) => renderRecItem(r, i, 'perhatian')).join('')}
@@ -317,7 +317,7 @@ function renderProfilView() {
         ${recsPengembangan.length > 0 ? `
         <div class="recs-group">
           <div class="recs-group-header" style="border-left-color:#10b981">
-            <span>🟢 Pengembangan</span>
+            <span><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="6" fill="#10b981"/></svg> Pengembangan</span>
             <span class="recs-count">${recsPengembangan.length}</span>
           </div>
           ${recsPengembangan.map((r, i) => renderRecItem(r, i, 'pengembangan')).join('')}
@@ -325,7 +325,7 @@ function renderProfilView() {
 
         ${v.recommendations.length === 0 ? `
         <div style="text-align:center;padding:var(--space-8);color:var(--text-muted)">
-          <div style="font-size:2rem;margin-bottom:var(--space-3)">✅</div>
+          <div style="font-size:2rem;margin-bottom:var(--space-3);color:var(--primary-500)">${icons.checkCircle}</div>
           <p>Tidak ada rekomendasi intervensi — wilayah ini dalam kondisi baik.</p>
         </div>` : ''}
       </div>
@@ -417,7 +417,7 @@ function renderSIPSNBreakdown(byCategory, totalKg) {
       return `
         <div class="sipsn-bar-item">
           <div class="sipsn-bar-header">
-            <span>${cat?.emoji || '📦'} ${cat?.name || code}</span>
+            <span>${cat?.icon || icons.box} ${cat?.name || code}</span>
             <span style="font-weight:600">${formatWeight(kg)} (${pct}%)</span>
           </div>
           <div class="sipsn-bar-track">
@@ -433,17 +433,17 @@ function renderRecItem(rule, index, urgencyClass) {
       <div class="rec-item-header">
         <span class="rec-item-code">${rule.id}</span>
         <strong class="rec-item-title">${rule.title}</strong>
-        <span class="rec-item-meta">${rule.groupIcon} ${rule.group}</span>
+        <span class="rec-item-meta">${icons[rule.groupIcon] || icons.box} ${rule.group}</span>
       </div>
       <p class="rec-item-text">${rule.recommendation}</p>
       <div class="rec-item-footer">
-        <span class="rec-tag">📌 PJ: ${rule.pic}</span>
-        <span class="rec-tag">⏱️ ${rule.horizon}</span>
+        <span class="rec-tag">${icons.target} PJ: ${rule.pic}</span>
+        <span class="rec-tag">${icons.clock} ${rule.horizon}</span>
       </div>
     </div>`;
 }
 
 function getLocIcon(type) {
-  const map = { tps: '📍', tps3r: '♻️', bank_sampah: '🏦', pengepul: '🏪', tpa: '🏭' };
-  return map[type] || '📍';
+  const map = { tps: icons.mapPin, tps3r: icons.recycle, bank_sampah: icons.landmark, pengepul: icons.store, tpa: icons.factory };
+  return map[type] || icons.mapPin;
 }

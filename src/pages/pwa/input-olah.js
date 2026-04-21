@@ -30,7 +30,7 @@ export async function renderInputOlah() {
       </div>
 
       <div class="olah-info-banner">
-        <span class="olah-info-icon">🔄</span>
+        <span class="olah-info-icon">${icons.refreshCw}</span>
         <div>
           <strong>Pengolahan Mandiri</strong>
           <p>Catat sampah yang diolah sendiri menjadi produk berguna (kompos, pakan ternak, dll) tanpa masuk TPA.</p>
@@ -43,7 +43,7 @@ export async function renderInputOlah() {
           <div class="category-grid" style="grid-template-columns:repeat(2,1fr)" id="methodGrid">
             ${TREATMENT_METHODS.map(m => `
               <div class="category-chip" data-method="${m.id}" title="${m.desc}">
-                <span class="category-emoji">${m.emoji}</span>
+                <span class="category-emoji">${m.icon}</span>
                 <span>${m.label}</span>
               </div>
             `).join('')}
@@ -55,7 +55,7 @@ export async function renderInputOlah() {
           <div class="category-grid" id="categoryGrid">
             ${SIPSN_CATEGORIES.map(c => `
               <div class="category-chip" data-cat="${c.code}">
-                <span class="category-emoji">${c.emoji}</span>
+                <span class="category-emoji" style="color:${c.color}">${c.icon}</span>
                 <span>${c.name}</span>
               </div>
             `).join('')}
@@ -107,7 +107,7 @@ export async function renderInputOlah() {
         ${photoPickerHTML('olah', false, 3)}
 
         <button type="submit" class="btn btn-lg btn-block" id="submitBtn" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none">
-          🔄 Simpan Pengolahan
+          ${icons.refreshCw} Simpan Pengolahan
         </button>
       </form>
     </div>
@@ -197,7 +197,7 @@ export async function renderInputOlah() {
     const days = getSelectedAccumDays();
     if (weight > 0 && days > 1) {
       const daily = (weight / days).toFixed(1);
-      preview.innerHTML = `📊 Sistem akan mencatat <strong>${daily} kg/hari</strong> selama ${days} hari ke belakang`;
+      preview.innerHTML = `${icons.chart} Sistem akan mencatat <strong>${daily} kg/hari</strong> selama ${days} hari ke belakang`;
       preview.style.display = 'block';
     } else {
       preview.style.display = 'none';
@@ -264,11 +264,11 @@ export async function renderInputOlah() {
         }, user.id);
       }
 
-      showToast(`${methodInfo?.emoji || '🔄'} ${weight} kg berhasil dicatat sebagai ${methodInfo?.label}!`, 'success');
+      showToast(`${weight} kg berhasil dicatat sebagai ${methodInfo?.label}!`, 'success');
       setTimeout(() => { window.location.hash = '#/pwa/home'; }, 800);
     } catch (err) {
       showToast('Gagal: ' + err.message, 'error');
-      btn.innerHTML = '🔄 Simpan Pengolahan';
+      btn.innerHTML = `${icons.refreshCw} Simpan Pengolahan`;
       btn.disabled = false;
     }
   });

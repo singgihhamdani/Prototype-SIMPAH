@@ -66,9 +66,9 @@ function renderRecords(records) {
             ${(r.photos || []).slice(0, 3).map(p => `<img src="${p.dataUrl}" style="width:20px;height:20px;object-fit:cover;border-radius:3px;border:1px solid var(--border-color)" />`).join('')}
           </div>` : ''}
         </div>
-        <div class="record-value">
-          ${formatWeight(r.weight_kg)}
-          ${!r.synced ? '<br><span class="badge badge-warning" style="font-size:9px">Pending</span>' : '<br><span class="badge badge-success" style="font-size:9px">Synced</span>'}
+        <div class="record-value" style="display:flex;flex-direction:column;align-items:flex-end">
+          <span style="font-size:var(--font-lg);font-weight:700;color:var(--text-primary)">${formatWeight(r.weight_kg)}</span>
+          ${getVerificationBadge(r)}
         </div>
       </div>
     `;
@@ -77,5 +77,12 @@ function renderRecords(records) {
 }
 
 function getTypeLabel(t) { return {masuk:'Sampah Masuk',pilah:'Terpilah',residu:'Residu'}[t]||t; }
-function getTypeEmoji(t) { return {masuk:'📥',pilah:'♻️',residu:'🗑️'}[t]||'📦'; }
+function getTypeEmoji(t) { return {masuk:icons.download,pilah:icons.layers,olah:icons.activity,residu:icons.trash}[t]||icons.box; }
 function getTypeBg(t) { return {masuk:'rgba(16,185,129,0.12)',pilah:'rgba(59,130,246,0.12)',residu:'rgba(239,68,68,0.12)'}[t]; }
+
+function getVerificationBadge(r) {
+  if (!r.synced) return '<span class="badge badge-warning" style="font-size:9px;margin-top:4px">Sinkronisasi...</span>';
+  if (!r.verification_status || r.verification_status === 'approved') return '<span class="badge badge-success" style="font-size:9px;margin-top:4px">Disetujui</span>';
+  if (r.verification_status === 'rejected') return '<span class="badge badge-danger" style="font-size:9px;margin-top:4px">Ditolak</span>';
+  return '<span class="badge" style="background:#fef08a;color:#854d0e;font-size:9px;margin-top:4px">Menunggu Validasi</span>';
+}

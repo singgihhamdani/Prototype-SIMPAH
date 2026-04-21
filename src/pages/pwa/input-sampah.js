@@ -36,7 +36,7 @@ export async function renderInputSampah() {
           <div class="category-grid" id="categoryGrid">
             ${SIPSN_CATEGORIES.map(cat => `
               <div class="category-chip" data-code="${cat.code}" id="cat-${cat.code}">
-                <span class="category-emoji">${cat.emoji}</span>
+                <span class="category-emoji" style="color:${cat.color}">${cat.icon}</span>
                 <span>${cat.name}</span>
               </div>
             `).join('')}
@@ -183,7 +183,7 @@ export async function renderInputSampah() {
     const wKg = unit === 'ton' ? w * 1000 : w;
     const days = getSelectedAccumDays();
     if (wKg > 0 && days > 1) {
-      preview.innerHTML = `📊 Sistem akan mencatat <strong>${(wKg / days).toFixed(1)} kg/hari</strong> selama ${days} hari ke belakang`;
+      preview.innerHTML = `${icons.chart} Sistem akan mencatat <strong>${(wKg / days).toFixed(1)} kg/hari</strong> selama ${days} hari ke belakang`;
       preview.style.display = 'block';
     } else { preview.style.display = 'none'; }
   }

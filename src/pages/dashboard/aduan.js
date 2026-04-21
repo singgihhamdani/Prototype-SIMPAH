@@ -6,11 +6,11 @@ import { showToast } from '../../components/toast.js';
 import { renderDashboardLayout } from './layout.js';
 
 const STATUS_CONFIG = {
-  baru: { label: 'Baru', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', icon: '📩' },
-  diproses: { label: 'Diproses', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', icon: '⏳' },
-  ditindaklanjuti: { label: 'Ditindaklanjuti', color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', icon: '🔧' },
-  selesai: { label: 'Selesai', color: '#10b981', bg: 'rgba(16,185,129,0.1)', icon: '✅' },
-  ditolak: { label: 'Ditolak', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', icon: '❌' }
+  baru: { label: 'Baru', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', icon: icons.download },
+  diproses: { label: 'Diproses', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', icon: icons.clock },
+  ditindaklanjuti: { label: 'Ditindaklanjuti', color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', icon: icons.tool },
+  selesai: { label: 'Selesai', color: '#10b981', bg: 'rgba(16,185,129,0.1)', icon: icons.checkCircle },
+  ditolak: { label: 'Ditolak', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', icon: icons.xCircle }
 };
 
 export async function renderAduanManagement() {
@@ -24,7 +24,7 @@ export async function renderAduanManagement() {
     <div class="aduan-mgmt page-enter">
       <div class="am-header">
         <div>
-          <h2>📋 Manajemen Aduan Warga</h2>
+          <h2 style="display:flex;align-items:center;gap:8px;">${icons.clipboard} Manajemen Aduan Warga</h2>
           <p>Pantau, proses, dan tindak lanjuti laporan dari masyarakat.</p>
         </div>
       </div>
@@ -36,11 +36,11 @@ export async function renderAduanManagement() {
       <div class="am-filter">
         <div class="am-filter-group">
           <button class="am-filter-btn active" data-filter="all">Semua</button>
-          <button class="am-filter-btn" data-filter="baru">📩 Baru</button>
-          <button class="am-filter-btn" data-filter="diproses">⏳ Diproses</button>
-          <button class="am-filter-btn" data-filter="ditindaklanjuti">🔧 Ditindaklanjuti</button>
-          <button class="am-filter-btn" data-filter="selesai">✅ Selesai</button>
-          <button class="am-filter-btn" data-filter="ditolak">❌ Ditolak</button>
+          <button class="am-filter-btn" data-filter="baru" style="display:inline-flex;align-items:center;gap:4px;">${icons.download} Baru</button>
+          <button class="am-filter-btn" data-filter="diproses" style="display:inline-flex;align-items:center;gap:4px;">${icons.clock} Diproses</button>
+          <button class="am-filter-btn" data-filter="ditindaklanjuti" style="display:inline-flex;align-items:center;gap:4px;">${icons.tool} Ditindaklanjuti</button>
+          <button class="am-filter-btn" data-filter="selesai" style="display:inline-flex;align-items:center;gap:4px;">${icons.checkCircle} Selesai</button>
+          <button class="am-filter-btn" data-filter="ditolak" style="display:inline-flex;align-items:center;gap:4px;">${icons.xCircle} Ditolak</button>
         </div>
       </div>
 
@@ -139,7 +139,7 @@ export async function renderAduanManagement() {
           <div class="am-card-cat">${c.category}</div>
           <div class="am-card-desc">${c.description}</div>
           <div class="am-card-footer">
-            <span class="am-card-reporter">👤 ${c.reporter_name || 'Anonim'}${c.reporter_phone ? ' • 📞 ' + c.reporter_phone : ''}</span>
+            <span class="am-card-reporter" style="display:inline-flex;align-items:center;gap:4px;">${icons.user} ${c.reporter_name || 'Anonim'}${c.reporter_phone ? ' • ' + c.reporter_phone : ''}</span>
             <span class="am-card-date">${dt}</span>
           </div>
         </div>
@@ -185,20 +185,20 @@ export async function renderAduanManagement() {
 
       <div class="am-desc-box"><strong>Deskripsi:</strong><br/>${c.description}</div>
 
-      ${c.response ? `<div class="am-desc-box" style="border-left:3px solid var(--primary-500)"><strong>💬 Tanggapan Dinas:</strong><br/>${c.response}</div>` : ''}
+      ${c.response ? `<div class="am-desc-box" style="border-left:3px solid var(--primary-500)"><strong><span style="display:inline-flex;align-items:center;gap:4px;vertical-align:-4px">${icons.messageCircle}</span> Tanggapan Dinas:</strong><br/>${c.response}</div>` : ''}
 
       <div class="am-action-section">
         <h4>Ubah Status</h4>
         <div class="am-action-btns">
           ${Object.entries(STATUS_CONFIG).map(([key, s]) => `
-            <button class="am-action-btn ${c.status === key ? 'primary' : ''}" data-status="${key}">${s.icon} ${s.label}</button>
+            <button class="am-action-btn ${c.status === key ? 'primary' : ''}" data-status="${key}" style="display:inline-flex;align-items:center;gap:4px;">${s.icon} ${s.label}</button>
           `).join('')}
         </div>
         <div class="form-group" style="margin-top:var(--space-3)">
           <label class="form-label" style="font-size:var(--font-xs)">Tanggapan / Catatan Tindak Lanjut</label>
           <textarea id="responseInput" class="form-textarea" rows="3" placeholder="Tuliskan tanggapan atau penjelasan untuk masyarakat...">${c.response || ''}</textarea>
         </div>
-        <button class="btn btn-primary btn-block" id="saveStatusBtn" style="margin-top:var(--space-3)">💾 Simpan Perubahan</button>
+        <button class="btn btn-primary btn-block" id="saveStatusBtn" style="margin-top:var(--space-3);display:flex;align-items:center;justify-content:center;gap:8px;">${icons.checkCircle} Simpan Perubahan</button>
       </div>
     `;
     document.getElementById('aduanModal').style.display = 'flex';

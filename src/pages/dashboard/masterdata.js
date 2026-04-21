@@ -20,14 +20,14 @@ export async function renderMasterData() {
   renderDashboardLayout('Master Data', `
     <div class="master-data page-enter">
       <div class="md-header">
-        <h2>⚙️ Pengaturan Master Data</h2>
+        <h2 style="display:flex;align-items:center;gap:var(--space-2)">${icons.settings} Pengaturan Master Data</h2>
         <p>Kelola data referensi sistem: lokasi, kendaraan, dan pengguna.</p>
       </div>
 
       <div class="md-tabs" id="mdTabs">
-        <button class="md-tab active" data-tab="locations">📍 Lokasi</button>
-        <button class="md-tab" data-tab="fleet">🚛 Kendaraan</button>
-        <button class="md-tab" data-tab="users">👥 Pengguna</button>
+        <button class="md-tab active" data-tab="locations" style="display:inline-flex;align-items:center;gap:8px">${icons.mapPin} Lokasi</button>
+        <button class="md-tab" data-tab="fleet" style="display:inline-flex;align-items:center;gap:8px">${icons.truck} Kendaraan</button>
+        <button class="md-tab" data-tab="users" style="display:inline-flex;align-items:center;gap:8px">${icons.users} Pengguna</button>
       </div>
 
       <div class="md-content" id="mdContent">
@@ -40,7 +40,7 @@ export async function renderMasterData() {
       <div class="md-modal">
         <div class="md-modal-header">
           <h3 id="modalTitle">Form</h3>
-          <button class="md-modal-close" id="modalClose">${icons.close || '✕'}</button>
+          <button class="md-modal-close" id="modalClose">${icons.close}</button>
         </div>
         <div class="md-modal-body" id="modalBody"></div>
       </div>
@@ -128,7 +128,7 @@ export async function renderMasterData() {
     container.innerHTML = `
       <div class="md-toolbar">
         <div style="display:flex;align-items:center;gap:var(--space-3)">
-          <h3>📍 Daftar Lokasi</h3>
+          <h3 style="display:flex;align-items:center;gap:8px">${icons.mapPin} Daftar Lokasi</h3>
           <span class="md-count">${locations.length} lokasi</span>
         </div>
         <button class="btn btn-primary btn-sm" id="addLocationBtn">${icons.plus} Tambah Lokasi</button>
@@ -143,8 +143,8 @@ export async function renderMasterData() {
               <td>${l.wilayah || '-'}</td>
               <td style="font-size:var(--font-xs);color:var(--text-muted)">${l.lat && l.lng ? `${Number(l.lat).toFixed(4)}, ${Number(l.lng).toFixed(4)}` : '-'}</td>
               <td><div class="md-actions">
-                <button class="md-btn-icon" title="Edit" data-edit-loc="${l.id}">✏️</button>
-                <button class="md-btn-icon danger" title="Hapus" data-del-loc="${l.id}">🗑️</button>
+                <button class="md-btn-icon" title="Edit" data-edit-loc="${l.id}">${icons.edit}</button>
+                <button class="md-btn-icon danger" title="Hapus" data-del-loc="${l.id}">${icons.trash}</button>
               </div></td>
             </tr>`).join('')}
         </tbody>
@@ -175,7 +175,7 @@ export async function renderMasterData() {
         <div class="form-group">
           <label class="form-label">Tipe</label>
           <select class="form-select" id="locType" required>
-            ${LOCATION_TYPES.map(t => `<option value="${t.id}" ${existing?.type === t.id ? 'selected' : ''}>${t.icon} ${t.label}</option>`).join('')}
+            ${LOCATION_TYPES.map(t => `<option value="${t.id}" ${existing?.type === t.id ? 'selected' : ''}>${t.label}</option>`).join('')}
           </select>
         </div>
         <div class="form-group">
@@ -228,7 +228,7 @@ export async function renderMasterData() {
     container.innerHTML = `
       <div class="md-toolbar">
         <div style="display:flex;align-items:center;gap:var(--space-3)">
-          <h3>🚛 Daftar Kendaraan</h3>
+          <h3 style="display:flex;align-items:center;gap:8px">${icons.truck} Daftar Kendaraan</h3>
           <span class="md-count">${fleet.length} unit</span>
         </div>
         <button class="btn btn-primary btn-sm" id="addFleetBtn">${icons.plus} Tambah Kendaraan</button>
@@ -243,8 +243,8 @@ export async function renderMasterData() {
               <td>${f.capacity_m3 ? f.capacity_m3 + ' m³' : '-'}</td>
               <td><span class="md-badge ${f.status === 'active' ? 'green' : 'red'}">${f.status === 'active' ? 'Aktif' : 'Nonaktif'}</span></td>
               <td><div class="md-actions">
-                <button class="md-btn-icon" title="Edit" data-edit-fleet="${f.id}">✏️</button>
-                <button class="md-btn-icon danger" title="Hapus" data-del-fleet="${f.id}">🗑️</button>
+                <button class="md-btn-icon" title="Edit" data-edit-fleet="${f.id}">${icons.edit}</button>
+                <button class="md-btn-icon danger" title="Hapus" data-del-fleet="${f.id}">${icons.trash}</button>
               </div></td>
             </tr>`).join('')}
         </tbody>
@@ -322,7 +322,7 @@ export async function renderMasterData() {
     container.innerHTML = `
       <div class="md-toolbar">
         <div style="display:flex;align-items:center;gap:var(--space-3)">
-          <h3>👥 Daftar Pengguna</h3>
+          <h3 style="display:flex;align-items:center;gap:8px">${icons.users} Daftar Pengguna</h3>
           <span class="md-count">${users.length} akun</span>
         </div>
         <button class="btn btn-primary btn-sm" id="addUserBtn">${icons.plus} Tambah Pengguna</button>
@@ -337,8 +337,8 @@ export async function renderMasterData() {
               <td><span class="md-badge ${roleColors[u.role] || 'blue'}">${u.role_icon || ''} ${roleLabels[u.role] || u.role}</span></td>
               <td>${u.wilayah || '-'}</td>
               <td><div class="md-actions">
-                <button class="md-btn-icon" title="Edit" data-edit-user="${u.id}">✏️</button>
-                ${u.role !== 'dinas' ? `<button class="md-btn-icon danger" title="Hapus" data-del-user="${u.id}">🗑️</button>` : ''}
+                <button class="md-btn-icon" title="Edit" data-edit-user="${u.id}">${icons.edit}</button>
+                ${u.role !== 'dinas' ? `<button class="md-btn-icon danger" title="Hapus" data-del-user="${u.id}">${icons.trash}</button>` : ''}
               </div></td>
             </tr>`).join('')}
         </tbody>
@@ -380,7 +380,7 @@ export async function renderMasterData() {
         <div class="form-group">
           <label class="form-label">Role / Peran</label>
           <select class="form-select" id="userRole" required>
-            ${USER_ROLES.map(r => `<option value="${r.id}" ${existing?.role === r.id ? 'selected' : ''}>${r.icon} ${r.label}</option>`).join('')}
+            ${USER_ROLES.map(r => `<option value="${r.id}" ${existing?.role === r.id ? 'selected' : ''}>${r.label}</option>`).join('')}
           </select>
         </div>
         <div class="form-group">

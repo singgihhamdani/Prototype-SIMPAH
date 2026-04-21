@@ -4,11 +4,11 @@ import { getComplaintByTracking } from '../../db/store.js';
 import { renderPortalNav, renderPortalFooter, initPortalNav } from './beranda.js';
 
 const STATUS_CONFIG = {
-  baru: { label: 'Baru Diterima', color: '#3b82f6', icon: '📩', bg: 'rgba(59,130,246,0.1)', step: 1 },
-  diproses: { label: 'Sedang Diproses', color: '#f59e0b', icon: '⏳', bg: 'rgba(245,158,11,0.1)', step: 2 },
-  ditindaklanjuti: { label: 'Ditindaklanjuti', color: '#8b5cf6', icon: '🔧', bg: 'rgba(139,92,246,0.1)', step: 3 },
-  selesai: { label: 'Selesai', color: '#10b981', icon: '✅', bg: 'rgba(16,185,129,0.1)', step: 4 },
-  ditolak: { label: 'Ditolak', color: '#ef4444', icon: '❌', bg: 'rgba(239,68,68,0.1)', step: 0 }
+  baru: { label: 'Baru Diterima', color: '#3b82f6', icon: icons.download, bg: 'rgba(59,130,246,0.1)', step: 1 },
+  diproses: { label: 'Sedang Diproses', color: '#f59e0b', icon: icons.clock, bg: 'rgba(245,158,11,0.1)', step: 2 },
+  ditindaklanjuti: { label: 'Ditindaklanjuti', color: '#8b5cf6', icon: icons.tool, bg: 'rgba(139,92,246,0.1)', step: 3 },
+  selesai: { label: 'Selesai', color: '#10b981', icon: icons.checkCircle, bg: 'rgba(16,185,129,0.1)', step: 4 },
+  ditolak: { label: 'Ditolak', color: '#ef4444', icon: icons.xCircle, bg: 'rgba(239,68,68,0.1)', step: 0 }
 };
 
 export function renderCekAduan() {
@@ -120,7 +120,7 @@ export function renderCekAduan() {
     if (!complaint) {
       container.innerHTML = `
         <div class="track-empty">
-          <div class="track-empty-icon">🔍</div>
+          <div class="track-empty-icon" style="color:var(--text-muted)">${icons.search}</div>
           <h4>Aduan Tidak Ditemukan</h4>
           <p>Nomor resi <strong>${query}</strong> tidak ditemukan. Pastikan nomor resi yang Anda masukkan benar.</p>
         </div>
@@ -130,10 +130,10 @@ export function renderCekAduan() {
 
     const cfg = STATUS_CONFIG[complaint.status] || STATUS_CONFIG.baru;
     const steps = [
-      { label: 'Diterima', icon: '📩' },
-      { label: 'Diproses', icon: '⏳' },
-      { label: 'Tindak Lanjut', icon: '🔧' },
-      { label: 'Selesai', icon: '✅' }
+      { label: 'Diterima', icon: icons.download },
+      { label: 'Diproses', icon: icons.clock },
+      { label: 'Tindak Lanjut', icon: icons.tool },
+      { label: 'Selesai', icon: icons.checkCircle }
     ];
     const currentStep = cfg.step;
     const progressWidth = currentStep === 0 ? 0 : ((currentStep - 1) / (steps.length - 1)) * 100;
@@ -154,7 +154,7 @@ export function renderCekAduan() {
               const isActive = (i + 1) === currentStep;
               const isDone = (i + 1) < currentStep;
               return `<div class="track-step ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}">
-                <div class="track-dot ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}">${isDone ? '✓' : s.icon}</div>
+                <div class="track-dot ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}">${isDone ? icons.checkCircle : s.icon}</div>
                 <span class="track-step-label">${s.label}</span>
               </div>`;
             }).join('')}
@@ -172,7 +172,7 @@ export function renderCekAduan() {
 
           ${complaint.response ? `
           <div class="track-response">
-            <div class="track-response-title">💬 Tanggapan Dinas</div>
+            <div class="track-response-title" style="display:flex;align-items:center;gap:4px;">${icons.messageCircle} Tanggapan Dinas</div>
             <p>${complaint.response}</p>
           </div>` : ''}
         </div>

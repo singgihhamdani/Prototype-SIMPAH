@@ -69,6 +69,7 @@ Panel ringkasan (*Analytics & Reporting*) berorientasi indikator KPI makro kabup
 *   **Export Data Terstandarisasi:** Unduh tabel tabulasi yang diformat *plek-ketiplek* sesuai kolom persyaratan SIPSN (via *CSV* atau *Excel*).
 *   **Manajemen MoU Transportasi:** Meninjau daftar armada transporter swasta, melacak nomor registrasi, serta status aktif/kadaluarsa dari perjanjian MoU.
 *   **Master Data Management (MDM):** Panel khusus CRUD bagi admin Dinas untuk mengelola dan menambah kamus entitas utama sistem secara dinamis (Daftar Lokasi TPS, Daftar Armada Kendaraan, dan Manajemen Akun Pengguna).
+*   **Manajemen Aduan Warga:** Panel monitoring komprehensif bagi Dinas untuk melihat, merespon, dan menindaklanjuti keluhan masyarakat yang masuk beserta pembaruan status penyelesaiannya secara transparan.
 
 ### 4.4. Portal Publik 
 Gerbang transparansi, partisipasi informasi, dan serap aspirasi warga.
@@ -76,7 +77,7 @@ Gerbang transparansi, partisipasi informasi, dan serap aspirasi warga.
 *   **Halaman Regulasi:** Direktori terpusat untuk menampilkan Perda dan Perbup yang berkaitan dengan persampahan. Downloadable *PDF*.
 *   **Lapor & Aduan (Without Login):**
     *   Memungkinkan masyarakat untuk melapor masalah (seperti TPS membludak / tumpukan liar).
-    *   Sistem Nomor Tiket (Resi Pelacakan Publik) yang transparan untuk cek status penanganan *-- (Roadmap)*.
+    *   **Sistem Nomor Tiket (Resi Pelacakan Publik):** Warga akan mendapatkan Nomor Resi (misal: `ADU-260401-1234`) setelah mengunggah laporan, lalu dapat mengecek status (Diterima, Diproses, Ditindaklanjuti, Selesai) beserta melihat "Tanggapan Dinas" secara transparan.
     *   Otomatis menarik *Geotagging* Lokasi warga.
     *   Wajib menyertakan *Upload Foto*.
 

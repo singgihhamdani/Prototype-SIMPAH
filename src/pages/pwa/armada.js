@@ -16,13 +16,13 @@ export async function renderArmada() {
     <div class="page-enter">
       <div class="section-header">
         <h3 style="font-size:var(--font-base);font-weight:700">Daftar Kendaraan</h3>
-        <button class="btn btn-primary btn-sm" id="addFleetBtn">${icons.plus} Tambah</button>
+        ${['dinas', 'pemdes'].includes(user.role) ? `<button class="btn btn-primary btn-sm" id="addFleetBtn">${icons.plus} Tambah</button>` : ''}
       </div>
 
       <div class="record-list" id="fleetList">
         ${fleet.map(f => `
           <div class="record-item">
-            <div class="record-icon" style="background:rgba(245,158,11,0.12)">🚛</div>
+            <div class="record-icon" style="background:rgba(245,158,11,0.12)">${icons.truck}</div>
             <div class="record-info">
               <div class="record-title">${f.plate_number}</div>
               <div class="record-meta">${f.vehicle_type} · ${f.driver_name}</div>
@@ -41,7 +41,7 @@ export async function renderArmada() {
       <div class="record-list">
         ${mous.map(m => `
           <div class="record-item">
-            <div class="record-icon" style="background:rgba(59,130,246,0.12)">📋</div>
+            <div class="record-icon" style="background:rgba(59,130,246,0.12)">${icons.clipboard}</div>
             <div class="record-info">
               <div class="record-title">${m.transporter_name}</div>
               <div class="record-meta">${m.contract_number} · s/d ${formatDate(m.end_date)}</div>
@@ -52,6 +52,7 @@ export async function renderArmada() {
       </div>
     </div>
 
+    ${['dinas', 'pemdes'].includes(user.role) ? `
     <!-- Add Fleet Form (hidden) -->
     <div class="pwa-form" id="addFleetForm" style="display:none;margin-top:var(--space-4)">
       <h3 class="pwa-form-title">${icons.truck} Tambah Kendaraan Baru</h3>
@@ -82,30 +83,32 @@ export async function renderArmada() {
           <button type="submit" class="btn btn-primary btn-block">Simpan</button>
         </div>
       </form>
-    </div>
+    </div>` : ''}
   `);
 
   const addBtn = document.getElementById('addFleetBtn');
   const formDiv = document.getElementById('addFleetForm');
   const cancelBtn = document.getElementById('cancelFleetBtn');
 
-  addBtn.addEventListener('click', () => { formDiv.style.display = 'block'; addBtn.style.display = 'none'; });
-  cancelBtn.addEventListener('click', () => { formDiv.style.display = 'none'; addBtn.style.display = ''; });
+  if (addBtn && formDiv && cancelBtn) {
+    addBtn.addEventListener('click', () => { formDiv.style.display = 'block'; addBtn.style.display = 'none'; });
+    cancelBtn.addEventListener('click', () => { formDiv.style.display = 'none'; addBtn.style.display = ''; });
 
-  document.getElementById('newFleetForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-      await addFleet({
-        plate_number: document.getElementById('plateInput').value.trim(),
-        vehicle_type: document.getElementById('vehicleTypeInput').value,
-        driver_name: document.getElementById('driverInput').value.trim(),
-        capacity_kg: parseInt(document.getElementById('capacityInput').value),
-        status: 'active'
-      }, user.id);
-      showToast('Kendaraan berhasil ditambahkan!', 'success');
-      renderArmada(); // Refresh
-    } catch (err) {
-      showToast('Gagal: ' + err.message, 'error');
-    }
-  });
+    document.getElementById('newFleetForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await addFleet({
+          plate_number: document.getElementById('plateInput').value.trim(),
+          vehicle_type: document.getElementById('vehicleTypeInput').value,
+          driver_name: document.getElementById('driverInput').value.trim(),
+          capacity_kg: parseInt(document.getElementById('capacityInput').value),
+          status: 'active'
+        }, user.id);
+        showToast('Kendaraan berhasil ditambahkan!', 'success');
+        renderArmada(); // Refresh
+      } catch (err) {
+        showToast('Gagal: ' + err.message, 'error');
+      }
+    });
+  }
 }

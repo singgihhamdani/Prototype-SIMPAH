@@ -8,6 +8,7 @@ import './styles/intervensi-print.css';
 import 'leaflet/dist/leaflet.css';
 
 import { registerRoute, startRouter } from './router.js';
+import { icons } from './components/icons.js';
 import { initTheme, getCurrentUser } from './utils/helpers.js';
 import { initDB } from './db/schema.js';
 import { seedDatabase } from './db/seed.js';
@@ -101,7 +102,7 @@ async function bootstrap() {
       app.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2rem;background:#0a0f1a;color:white">
           <div>
-            <h1 style="font-size:2rem;margin-bottom:1rem">⚠️ Terjadi Kesalahan</h1>
+            <h1 style="display:flex;align-items:center;justify-content:center;gap:0.5rem;font-size:2rem;margin-bottom:1rem;color:#ef4444">${icons.alert} <span style="color:white">Terjadi Kesalahan</span></h1>
             <p style="color:#9ca3af;margin-bottom:1.5rem">${error.message}</p>
             <button onclick="location.reload()" style="padding:0.75rem 2rem;background:#10b981;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem">Muat Ulang</button>
           </div>

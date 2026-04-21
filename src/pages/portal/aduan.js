@@ -52,13 +52,13 @@ export function renderAduan() {
                 <label class="form-label">Kategori Masalah <span style="color:var(--danger-500)">*</span></label>
                 <select id="complaintCategory" class="form-select" required>
                   <option value="">Pilih kategori...</option>
-                  <option value="Sampah menumpuk">🗑️ Sampah menumpuk</option>
-                  <option value="Pembuangan liar">⚠️ Pembuangan liar</option>
-                  <option value="Bau tidak sedap">👃 Bau tidak sedap</option>
-                  <option value="Sampah di sungai">🏞️ Sampah di sungai</option>
-                  <option value="TPS rusak">🔧 TPS rusak / tidak terawat</option>
-                  <option value="Pengangkutan terlambat">🚛 Pengangkutan terlambat</option>
-                  <option value="Lainnya">📋 Lainnya</option>
+                  <option value="Sampah menumpuk">Sampah menumpuk</option>
+                  <option value="Pembuangan liar">Pembuangan liar</option>
+                  <option value="Bau tidak sedap">Bau tidak sedap</option>
+                  <option value="Sampah di sungai">Sampah di sungai</option>
+                  <option value="TPS rusak">TPS rusak / tidak terawat</option>
+                  <option value="Pengangkutan terlambat">Pengangkutan terlambat</option>
+                  <option value="Lainnya">Lainnya</option>
                 </select>
               </div>
 
@@ -94,7 +94,7 @@ export function renderAduan() {
 
           <!-- Success State -->
           <div class="complaint-form" id="complaintSuccess" style="display:none;text-align:center;padding:var(--space-12) var(--space-8)">
-            <div style="font-size:64px;margin-bottom:var(--space-4)">✅</div>
+            <div style="color:var(--primary-500);margin-bottom:var(--space-4)">${icons.checkCircle}</div>
             <h3 style="font-size:var(--font-2xl);font-weight:800;margin-bottom:var(--space-3)">Laporan Terkirim!</h3>
             <p style="color:var(--text-secondary);margin-bottom:var(--space-4)">Terima kasih atas partisipasi Anda.</p>
             <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-6)">

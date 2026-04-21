@@ -28,9 +28,9 @@ export async function renderInputResidu() {
           <label class="form-label">Berat Residu</label>
           <div class="weight-input-group">
             <input type="number" id="weightInput" class="form-input form-input-lg" placeholder="0" step="0.1" min="0" required inputmode="decimal" />
-            <div class="weight-unit-toggle">
-              <button type="button" class="weight-unit-btn active" data-unit="kg">kg</button>
-              <button type="button" class="weight-unit-btn" data-unit="ton">ton</button>
+            <div class="weight-unit-toggle fat-finger-toggle">
+              <button type="button" class="weight-unit-btn active" data-unit="kg">KG</button>
+              <button type="button" class="weight-unit-btn" data-unit="ton">TON</button>
             </div>
           </div>
         </div>
@@ -66,6 +66,32 @@ export async function renderInputResidu() {
         </button>
       </form>
     </div>
+    <style>
+      .fat-finger-toggle {
+        display: flex;
+        border-radius: var(--radius-lg);
+        background: var(--bg-secondary);
+        padding: 4px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      }
+      .fat-finger-toggle .weight-unit-btn {
+        flex: 1;
+        padding: var(--space-4) var(--space-6);
+        font-size: var(--font-base);
+        font-weight: 700;
+        border-radius: var(--radius-md);
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .fat-finger-toggle .weight-unit-btn.active {
+        background: var(--primary-500);
+        color: white;
+        box-shadow: 0 4px 6px rgba(16,185,129,0.2);
+      }
+    </style>
   `);
 
   // Init photo picker

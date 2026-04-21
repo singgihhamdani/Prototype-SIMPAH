@@ -1,16 +1,17 @@
 // SIMPAH - Portal Galeri
+import { icons } from '../../components/icons.js';
 import { renderPortalNav, renderPortalFooter, initPortalNav } from './beranda.js';
 
 const GALLERY_ITEMS = [
-  { title: 'Kerja Bakti Bersih Desa Semampir', category: 'Kegiatan', color: '#10b981', emoji: '🧹' },
-  { title: 'Sosialisasi Pilah Sampah RT/RW', category: 'Edukasi', color: '#3b82f6', emoji: '📢' },
-  { title: 'Operasional TPS3R Banjarnegara', category: 'Operasional', color: '#f59e0b', emoji: '🏭' },
-  { title: 'Pelatihan Kader Lingkungan', category: 'Pelatihan', color: '#8b5cf6', emoji: '👩‍🏫' },
-  { title: 'Bank Sampah Berseri - Penimbangan', category: 'Bank Sampah', color: '#0d9488', emoji: '⚖️' },
-  { title: 'Pengangkutan Sampah ke TPA Winong', category: 'Operasional', color: '#ef4444', emoji: '🚛' },
-  { title: 'Pembuatan Kompos di TPS3R', category: 'Daur Ulang', color: '#22c55e', emoji: '🌱' },
-  { title: 'Monitoring Lapangan Oleh Dinas', category: 'Monitoring', color: '#6366f1', emoji: '📋' },
-  { title: 'Penyerahan Hasil Daur Ulang ke Pengepul', category: 'Bank Sampah', color: '#f97316', emoji: '📦' }
+  { title: 'Kerja Bakti Bersih Desa Semampir', category: 'Kegiatan', color: '#10b981', iconKey: 'users' },
+  { title: 'Sosialisasi Pilah Sampah RT/RW', category: 'Edukasi', color: '#3b82f6', iconKey: 'messageCircle' },
+  { title: 'Operasional TPS3R Banjarnegara', category: 'Operasional', color: '#f59e0b', iconKey: 'settings' },
+  { title: 'Pelatihan Kader Lingkungan', category: 'Pelatihan', color: '#8b5cf6', iconKey: 'users' },
+  { title: 'Bank Sampah Berseri - Penimbangan', category: 'Bank Sampah', color: '#0d9488', iconKey: 'layers' },
+  { title: 'Pengangkutan Sampah ke TPA Winong', category: 'Operasional', color: '#ef4444', iconKey: 'truck' },
+  { title: 'Pembuatan Kompos di TPS3R', category: 'Daur Ulang', color: '#22c55e', iconKey: 'activity' },
+  { title: 'Monitoring Lapangan Oleh Dinas', category: 'Monitoring', color: '#6366f1', iconKey: 'clipboard' },
+  { title: 'Penyerahan Hasil Daur Ulang ke Pengepul', category: 'Bank Sampah', color: '#f97316', iconKey: 'box' }
 ];
 
 export function renderGaleri() {
@@ -27,8 +28,8 @@ export function renderGaleri() {
           <div class="gallery-grid">
             ${GALLERY_ITEMS.map((item, i) => `
               <div class="gallery-item" style="animation:fadeInUp 0.4s ease ${i*0.06}s both">
-                <div style="width:100%;height:100%;background:linear-gradient(135deg, ${item.color}30, ${item.color}60);display:flex;align-items:center;justify-content:center;font-size:64px">
-                  ${item.emoji}
+                <div style="width:100%;height:100%;background:linear-gradient(135deg, ${item.color}30, ${item.color}60);display:flex;align-items:center;justify-content:center;color:${item.color}">
+                  ${icons[item.iconKey] || icons.box}
                 </div>
                 <div class="gallery-item-overlay">
                   <div>

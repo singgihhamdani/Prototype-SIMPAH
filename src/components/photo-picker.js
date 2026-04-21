@@ -1,5 +1,6 @@
 // SIMPAH - Photo Picker Component
 // Handles camera capture & gallery upload, compresses to JPEG base64
+import { icons } from './icons.js';
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB raw
 const TARGET_WIDTH  = 1024;              // max output width
@@ -103,7 +104,7 @@ export function initPhotoPicker(id, { onUpdate } = {}) {
     grid.innerHTML = photos.map((p, i) => `
       <div class="photo-thumb">
         <img src="${p.dataUrl}" alt="Foto ${i+1}" />
-        <button type="button" class="photo-thumb-remove" data-idx="${i}" title="Hapus foto">✕</button>
+        <button type="button" class="photo-thumb-remove" data-idx="${i}" title="Hapus foto">${icons.close}</button>
       </div>
     `).join('');
 
