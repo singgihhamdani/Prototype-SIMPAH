@@ -196,6 +196,11 @@ export async function getAllComplaints() {
   return getAll('complaints');
 }
 
+export async function getComplaintByTracking(trackingNumber) {
+  const all = await getAll('complaints');
+  return all.find(c => c.tracking_number === trackingNumber) || null;
+}
+
 export async function addComplaint(complaint) {
   const data = {
     ...complaint,
@@ -206,6 +211,14 @@ export async function addComplaint(complaint) {
   };
   await put('complaints', data);
   return data;
+}
+
+export async function updateComplaint(id, updates) {
+  const complaint = await getById('complaints', id);
+  if (!complaint) throw new Error('Aduan tidak ditemukan');
+  const updated = { ...complaint, ...updates, updated_at: new Date().toISOString() };
+  await put('complaints', updated);
+  return updated;
 }
 
 // ========== Incidental Events ==========

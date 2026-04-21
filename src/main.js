@@ -35,6 +35,8 @@ import { renderEdukasi } from './pages/portal/edukasi.js';
 import { renderGaleri } from './pages/portal/galeri.js';
 import { renderRegulasi } from './pages/portal/regulasi.js';
 import { renderAduan } from './pages/portal/aduan.js';
+import { renderCekAduan } from './pages/portal/cek-aduan.js';
+import { renderAduanManagement } from './pages/dashboard/aduan.js';
 
 async function bootstrap() {
   try {
@@ -71,6 +73,7 @@ async function bootstrap() {
     registerRoute('/dashboard/mou', () => renderMou());
     registerRoute('/dashboard/intervensi', () => renderIntervensi());
     registerRoute('/dashboard/masterdata', () => renderMasterData());
+    registerRoute('/dashboard/aduan', () => renderAduanManagement());
 
     // Portal routes
     registerRoute('/portal', () => { renderPortalBeranda(); initPortalNav(); });
@@ -78,6 +81,7 @@ async function bootstrap() {
     registerRoute('/portal/galeri', () => renderGaleri());
     registerRoute('/portal/regulasi', () => renderRegulasi());
     registerRoute('/portal/aduan', () => renderAduan());
+    registerRoute('/portal/cek-aduan', () => renderCekAduan());
 
     // Hide loading screen
     const loading = document.getElementById('loadingScreen');

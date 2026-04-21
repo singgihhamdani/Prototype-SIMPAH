@@ -67,6 +67,12 @@ export async function initDB() {
         const comp = db.createObjectStore('complaints', { keyPath: 'id' });
         comp.createIndex('status', 'status');
         comp.createIndex('created_at', 'created_at');
+        comp.createIndex('tracking_number', 'tracking_number', { unique: true });
+      } else {
+        const comp = upgradeTransaction.objectStore('complaints');
+        if (!comp.indexNames.contains('tracking_number')) {
+          comp.createIndex('tracking_number', 'tracking_number', { unique: true });
+        }
       }
 
       // Audit Log

@@ -101,7 +101,8 @@ export function renderAduan() {
               <p style="font-size:var(--font-xs);color:var(--text-muted)">Nomor Tracking Anda:</p>
               <p style="font-size:var(--font-xl);font-weight:800;color:var(--primary-600)" id="trackingNumber">-</p>
             </div>
-            <button class="btn btn-primary" onclick="window.location.hash='#/portal'">Kembali ke Beranda</button>
+            <button class="btn btn-primary" id="trackNowBtn">Lacak Aduan Ini</button>
+            <button class="btn btn-ghost" onclick="window.location.hash='#/portal'" style="margin-top:var(--space-2)">Kembali ke Beranda</button>
           </div>
         </section>
       </div>
@@ -169,6 +170,10 @@ export function renderAduan() {
       document.getElementById('complaintFormCard').style.display = 'none';
       document.getElementById('complaintSuccess').style.display = 'block';
       document.getElementById('trackingNumber').textContent = result.tracking_number;
+      
+      document.getElementById('trackNowBtn').addEventListener('click', () => {
+        window.location.hash = `#/portal/cek-aduan?resi=${result.tracking_number}`;
+      });
     } catch (err) {
       showToast('Gagal mengirim laporan: ' + err.message, 'error');
       btn.innerHTML = `${icons.messageCircle} Kirim Laporan`;

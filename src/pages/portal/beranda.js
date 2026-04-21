@@ -108,7 +108,8 @@ export function renderPortalNav(active = '') {
           <a href="#/portal/edukasi" class="portal-nav-link ${active==='edukasi'?'active':''}">Edukasi</a>
           <a href="#/portal/galeri" class="portal-nav-link ${active==='galeri'?'active':''}">Galeri</a>
           <a href="#/portal/regulasi" class="portal-nav-link ${active==='regulasi'?'active':''}">Regulasi</a>
-          <a href="#/portal/aduan" class="portal-nav-link ${active==='aduan'?'active':''}">Aduan</a>
+          <a href="#/portal/aduan" class="portal-nav-link ${active==='aduan'?'active':''}">Lapor Baru</a>
+          <a href="#/portal/cek-aduan" class="portal-nav-link ${active==='cek-aduan'?'active':''}">Cek Resi</a>
           <a href="#/login" class="btn btn-primary btn-sm portal-nav-cta">Masuk</a>
         </div>
         <button class="portal-mobile-toggle" id="portalMenuToggle">${icons.menu}</button>
@@ -138,6 +139,7 @@ export function renderPortalFooter() {
           <h4>Layanan</h4>
           <div class="portal-footer-links">
             <a href="#/portal/aduan">Form Aduan</a>
+            <a href="#/portal/cek-aduan">Cek Status Aduan</a>
             <a href="#/login">Login Petugas</a>
             <a href="#/dashboard/gis">Peta GIS</a>
           </div>
