@@ -28,6 +28,7 @@ import { renderEksekutif } from './pages/dashboard/eksekutif.js';
 import { renderLaporan } from './pages/dashboard/laporan.js';
 import { renderMou } from './pages/dashboard/mou.js';
 import { renderIntervensi } from './pages/dashboard/intervensi.js';
+import { renderMasterData } from './pages/dashboard/masterdata.js';
 import { renderValidasi } from './pages/dashboard/validasi.js';
 import { renderPortalBeranda, initPortalNav } from './pages/portal/beranda.js';
 import { renderEdukasi } from './pages/portal/edukasi.js';
@@ -69,6 +70,7 @@ async function bootstrap() {
     registerRoute('/dashboard/validasi', () => renderValidasi());
     registerRoute('/dashboard/mou', () => renderMou());
     registerRoute('/dashboard/intervensi', () => renderIntervensi());
+    registerRoute('/dashboard/masterdata', () => renderMasterData());
 
     // Portal routes
     registerRoute('/portal', () => { renderPortalBeranda(); initPortalNav(); });

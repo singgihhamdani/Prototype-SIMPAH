@@ -126,7 +126,19 @@ export async function getLocationsByType(type) {
 }
 
 export async function addLocation(location) {
-  return put('locations', { ...location, id: location.id || generateId() });
+  return put('locations', { ...location, id: location.id || generateId(), created_at: new Date().toISOString() });
+}
+
+export async function updateLocation(id, updates) {
+  const loc = await getById('locations', id);
+  if (!loc) throw new Error('Lokasi tidak ditemukan');
+  const updated = { ...loc, ...updates, updated_at: new Date().toISOString() };
+  await put('locations', updated);
+  return updated;
+}
+
+export async function deleteLocation(id) {
+  await deleteById('locations', id);
 }
 
 // ========== Fleet ==========
@@ -143,6 +155,18 @@ export async function addFleet(fleet, userId) {
   await put('fleet', data);
   await createAuditEntry('fleet', data.id, 'create', userId, data);
   return data;
+}
+
+export async function updateFleet(id, updates) {
+  const fleet = await getById('fleet', id);
+  if (!fleet) throw new Error('Kendaraan tidak ditemukan');
+  const updated = { ...fleet, ...updates, updated_at: new Date().toISOString() };
+  await put('fleet', updated);
+  return updated;
+}
+
+export async function deleteFleet(id) {
+  await deleteById('fleet', id);
 }
 
 // ========== MoU ==========
@@ -211,7 +235,19 @@ export async function getUserByUsername(username) {
 }
 
 export async function addUser(user) {
-  return put('users', user);
+  return put('users', { ...user, id: user.id || generateId(), created_at: new Date().toISOString() });
+}
+
+export async function updateUser(id, updates) {
+  const user = await getById('users', id);
+  if (!user) throw new Error('Pengguna tidak ditemukan');
+  const updated = { ...user, ...updates, updated_at: new Date().toISOString() };
+  await put('users', updated);
+  return updated;
+}
+
+export async function deleteUser(id) {
+  await deleteById('users', id);
 }
 
 export async function getWasteStats() {
