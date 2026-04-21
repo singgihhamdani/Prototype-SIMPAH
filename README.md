@@ -75,6 +75,8 @@ Karena data dikelola di `IndexedDB` *(Browser Storage lokal)*, setiap profil mem
 | Role Akses | Tujuan / Fokus Demo | Username | Password |
 | :--- | :--- | :--- | :--- |
 | **Pekerja Lapangan (Kader)** | Tampilan PWA Mobile untuk rekam timbangan sampah | `kader1` | `kader123` |
+| **Petugas Truk / Armada** | Tampilan PWA Mobile khusus input residu ke TPA | `petugas1` | `petugas123` |
+| **Pengepul Sampah** | Tampilan PWA Mobile untuk rekam konversi daur ulang | `pengepul1` | `pengepul123` |
 | **Pemerintah Desa** | Dashboard Peta GIS dan Operasional Kewilayahan | `pemdes` | `pemdes123` |
 | **Tim Dinas / DLH Utama** | Dasbor Pusat (Eksekutif, Validasi, Intervensi Desa) | `dinas` | `dinas123` |
 
