@@ -94,8 +94,8 @@ export function renderLogin() {
       .login-divider span { position:relative; background:rgba(26,35,50,0.9); padding:0 var(--space-4); color:var(--gray-500); font-size:var(--font-sm); }
       .login-demo { margin-top:var(--space-6); text-align:center; }
       .login-demo > p { font-size:var(--font-xs); color:var(--gray-500); margin-bottom:var(--space-3); }
-      .demo-accounts { display:grid; grid-template-columns:repeat(2,1fr); gap:var(--space-2); }
-      .demo-account { padding:var(--space-2) var(--space-3); border-radius:var(--radius-md); border:1px solid rgba(255,255,255,0.08); color:var(--gray-400); font-size:var(--font-xs); font-weight:500; transition:all var(--transition-fast); display:flex; align-items:center; gap:var(--space-2); justify-content:center; cursor:pointer; background:transparent; }
+      .demo-accounts { display:grid; grid-template-columns:repeat(2,1fr); gap:var(--space-3); }
+      .demo-account { padding:var(--space-3) var(--space-4); border-radius:var(--radius-md); border:1px solid rgba(255,255,255,0.08); color:var(--gray-400); font-size:var(--font-sm); font-weight:500; transition:all var(--transition-fast); display:flex; align-items:center; gap:var(--space-2); justify-content:center; cursor:pointer; background:transparent; }
       .demo-account:hover { border-color:var(--primary-500); color:var(--primary-400); background:rgba(16,185,129,0.08); }
     </style>
   `;
