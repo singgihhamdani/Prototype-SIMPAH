@@ -117,19 +117,19 @@ export async function renderInputOlah() {
       .olah-info-banner p { font-size:var(--font-xs); color:var(--text-secondary); margin-top:var(--space-1); line-height:1.4; }
       .olah-info-banner strong { font-size:var(--font-sm); color:var(--amber-600, #d97706); }
       .accumulation-toggle { margin-bottom:var(--space-5); }
-      .accum-label { display:flex; align-items:center; gap:var(--space-3); cursor:pointer; font-size:var(--font-sm); font-weight:500; }
+      .accum-label { display:flex; align-items:center; gap:var(--space-3); cursor:pointer; font-size:var(--font-base); font-weight:600; }
       .accum-label input { display:none; }
       .accum-switch { width:40px; height:22px; border-radius:11px; background:var(--gray-300); position:relative; transition:all 0.2s; flex-shrink:0; }
       .accum-switch::after { content:''; width:18px; height:18px; border-radius:50%; background:#fff; position:absolute; top:2px; left:2px; transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
       .accum-label input:checked + .accum-switch { background:var(--primary-500); }
       .accum-label input:checked + .accum-switch::after { left:20px; }
       .accum-panel { margin-top:var(--space-3); padding:var(--space-4); border-radius:var(--radius-lg); background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.15); animation:scaleIn 0.2s ease; }
-      .accum-hint { font-size:var(--font-xs); color:var(--text-secondary); margin-bottom:var(--space-3); }
+      .accum-hint { font-size:var(--font-sm); color:var(--text-secondary); margin-bottom:var(--space-3); font-weight:500; }
       .accum-days-row { display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom:var(--space-3); }
-      .accum-day-btn { padding:var(--space-2) var(--space-4); border-radius:var(--radius-full); border:1px solid var(--border-color); background:transparent; font-size:var(--font-sm); font-weight:500; cursor:pointer; transition:all 0.15s; color:var(--text-primary); }
+      .accum-day-btn { padding:var(--space-3) var(--space-5); border-radius:var(--radius-full); border:1px solid var(--border-color); background:transparent; font-size:var(--font-sm); font-weight:600; cursor:pointer; transition:all 0.15s; color:var(--text-primary); }
       .accum-day-btn.selected { background:var(--primary-500); color:#fff; border-color:var(--primary-500); }
-      .accum-custom { display:flex; align-items:center; gap:var(--space-3); font-size:var(--font-xs); color:var(--text-muted); }
-      .accum-preview { margin-top:var(--space-3); padding:var(--space-3); border-radius:var(--radius-md); background:rgba(16,185,129,0.1); font-size:var(--font-xs); color:var(--primary-700, #047857); text-align:center; font-weight:600; }
+      .accum-custom { display:flex; align-items:center; gap:var(--space-3); font-size:var(--font-sm); color:var(--text-muted); }
+      .accum-preview { margin-top:var(--space-3); padding:var(--space-3); border-radius:var(--radius-md); background:rgba(16,185,129,0.1); font-size:var(--font-sm); color:var(--primary-700, #047857); text-align:center; font-weight:600; }
     </style>
   `);
 

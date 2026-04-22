@@ -15,7 +15,7 @@ export async function renderPWAHome() {
     <div class="pwa-greeting page-enter">
       <div class="greeting-text">
         <h2>Halo, ${user.name.split(' ')[0]}!</h2>
-        <p style="font-size:12px;color:var(--primary-600);font-weight:600;margin:2px 0 4px">${getMotivationalGreeting()}</p>
+        <p style="font-size:var(--font-sm);color:var(--primary-600);font-weight:600;margin:2px 0 4px">${getMotivationalGreeting()}</p>
         <p>${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
       </div>
       <div class="sync-status ${navigator.onLine ? 'online' : 'offline'}" id="syncIndicator">
@@ -152,10 +152,10 @@ function timeAgo(iso) {
 }
 
 function getVerificationBadge(r) {
-  if (!r.synced) return '<span class="badge badge-warning" style="font-size:9px;margin-top:4px">Sinkronisasi...</span>';
-  if (!r.verification_status || r.verification_status === 'approved') return '<span class="badge badge-success" style="font-size:9px;margin-top:4px">Disetujui</span>';
-  if (r.verification_status === 'rejected') return '<span class="badge badge-danger" style="font-size:9px;margin-top:4px">Ditolak</span>';
-  return '<span class="badge" style="background:#fef08a;color:#854d0e;font-size:9px;margin-top:4px">Tunggu Validasi</span>';
+  if (!r.synced) return '<span class="badge badge-warning" style="font-size:11px;margin-top:4px">Sinkronisasi...</span>';
+  if (!r.verification_status || r.verification_status === 'approved') return '<span class="badge badge-success" style="font-size:11px;margin-top:4px">Disetujui</span>';
+  if (r.verification_status === 'rejected') return '<span class="badge badge-danger" style="font-size:11px;margin-top:4px">Ditolak</span>';
+  return '<span class="badge" style="background:#fef08a;color:#854d0e;font-size:11px;margin-top:4px">Tunggu Validasi</span>';
 }
 
 function getMotivationalGreeting() {

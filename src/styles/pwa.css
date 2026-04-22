@@ -248,12 +248,12 @@
   gap: var(--space-2);
 }
 .category-chip {
-  padding: var(--space-3) var(--space-2);
-  border: 2px solid var(--border-color);
+  padding: var(--space-4) var(--space-2);
+  border: 3px solid var(--border-color);
   border-radius: var(--radius-lg);
   text-align: center;
-  font-size: var(--font-xs);
-  font-weight: 600;
+  font-size: var(--font-sm);
+  font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-fast);
   display: flex;
@@ -287,8 +287,8 @@
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
-  font-size: var(--font-xs);
-  font-weight: 500;
+  font-size: var(--font-sm);
+  font-weight: 600;
   margin-bottom: var(--space-4);
 }
 .gps-indicator.active {
@@ -324,12 +324,12 @@
   border: 1px solid var(--border-color);
 }
 .weight-unit-btn {
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--font-sm);
-  font-weight: 600;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-base);
+  font-weight: 700;
   color: var(--text-secondary);
   transition: all var(--transition-fast);
-  min-width: 44px;
+  min-width: 60px;
   text-align: center;
 }
 .weight-unit-btn.active {
