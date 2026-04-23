@@ -110,7 +110,7 @@ export function renderPortalNav(active = '') {
           <a href="#/portal/regulasi" class="portal-nav-link ${active==='regulasi'?'active':''}">Regulasi</a>
           <a href="#/portal/aduan" class="portal-nav-link ${active==='aduan'?'active':''}">Lapor Baru</a>
           <a href="#/portal/cek-aduan" class="portal-nav-link ${active==='cek-aduan'?'active':''}">Cek Resi</a>
-          <a href="#/login" class="btn btn-primary btn-sm portal-nav-cta">Masuk</a>
+          <a href="#/login" class="btn btn-primary portal-nav-cta">Masuk</a>
         </div>
         <button class="portal-mobile-toggle" id="portalMenuToggle">${icons.menu}</button>
       </div>

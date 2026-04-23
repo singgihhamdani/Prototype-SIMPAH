@@ -256,6 +256,12 @@
   object-fit: cover;
   background: var(--gray-200);
 }
+
+@keyframes kenBurns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.1) translate(-2%, -1%); }
+  100% { transform: scale(1.05) translate(2%, 1%); }
+}
 .portal-card-body {
   padding: var(--space-5);
 }
@@ -451,8 +457,8 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-lg);
-  background: rgba(239,68,68,0.1);
-  color: #dc2626;
+  background: var(--info-50);
+  color: var(--info-600);
   display: flex;
   align-items: center;
   justify-content: center;
