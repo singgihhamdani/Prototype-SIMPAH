@@ -27,16 +27,19 @@ Tujuan utama sistem ini adalah meningkatkan akurasi data pencatatan, mempermudah
 
 ---
 
-## 3. Target Pengguna (User Personas)
+## 3. Target Pengguna (User Personas & RBAC)
 
-| Peran (Role) | Kebutuhan Utama & Hak Akses |
-| --- | --- |
-| **Kader / Nasabah** | Memasukkan data sampah yang dipilah dari skala rumah tangga (Akses PWA Mobile). |
-| **Petugas Pengangkut** | Memasukkan data manifest truk, sampah masuk/residu, dan rute (Akses PWA Mobile). |
-| **Pemerintah Desa (Pemdes)** | Mengelola infrastruktur level mikro tingkat desa, memonitor rekap TPS operasional wilayahnya, dan memberdayakan Kader Lapangan. |
-| **Pengepul** | Mencatat sampah yang akan dikonversi menjadi bernilai ekonomi / daur ulang. |
-| **Dinas (Eksekutif)** | Akses dashboard *bird-eye view*, mengekstrak laporan SIPSN, memonitor kinerja, dan mengatur MoU transporter. |
-| **Masyarakat Publik** | Membaca edukasi, mengecek regulasi, serta membuat keluhan masalah (Aduan). |
+Sistem ini menggunakan arsitektur *Role-Based Access Control* (RBAC) 4 Peran Utama, dengan penjabaran operasional (*Job Types*) khusus untuk petugas lapangan:
+
+| Peran (Role) | Sub-Peran (Job Type) | Kebutuhan Utama & Hak Akses |
+| --- | --- | --- |
+| **Warga** | - | Melihat statistik publik, peta GIS, dan melaporkan aduan/keluhan (Akses Portal & PWA). |
+| **Petugas** | **Koordinator Lapangan** | Pengawas lapangan; memiliki hak untuk memvalidasi (Approve/Reject) data operasional. |
+| **Petugas** | **Petugas Angkut** | Memasukkan data manifest truk (Armada), sampah masuk, dan residu akhir. |
+| **Petugas** | **Operator TPS3R** | Pengelola TPS/Bank Sampah; akses penuh input Sampah Masuk, Pilah, Olah, dan Residu. |
+| **Petugas** | **Kader Lingkungan** | Penggerak RT/RW; menginput data Sampah Masuk, Pemilahan, serta **Olah Sampah** (misal: pakan maggot, kompos). |
+| **Eksekutif** | - | Akses dashboard *bird-eye view*, mengekstrak laporan SIPSN, dan memonitor kinerja. |
+| **Admin** | - | Hak kontrol penuh (*Superuser*), manajemen Master Data, Audit Log, Manajemen MoU, dan pengaturan sistem DLH. |
 
 ---
 

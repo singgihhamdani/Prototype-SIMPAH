@@ -6,13 +6,15 @@ import { SIPSN_CATEGORIES } from '../../utils/sipsn.js';
 import { showToast } from '../../components/toast.js';
 import { renderDashboardLayout } from './layout.js';
 
+import { canValidate } from '../../utils/permissions.js';
+
 let pendingRecords = [];
 let allRecordsCache = [];
 
 export async function renderValidasi() {
   const user = getCurrentUser();
-  if (!user || user.role !== 'dinas') { 
-    window.location.hash = '#/dashboard/eksekutif'; 
+  if (!user || !canValidate(user)) { 
+    window.location.hash = '#/dashboard'; 
     return; 
   }
 

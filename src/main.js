@@ -38,6 +38,7 @@ import { renderRegulasi } from './pages/portal/regulasi.js';
 import { renderAduan } from './pages/portal/aduan.js';
 import { renderCekAduan } from './pages/portal/cek-aduan.js';
 import { renderAduanManagement } from './pages/dashboard/aduan.js';
+import { renderAuditLog } from './pages/dashboard/audit.js';
 
 async function bootstrap() {
   try {
@@ -67,6 +68,7 @@ async function bootstrap() {
     registerRoute('/pwa/riwayat', () => renderRiwayat());
 
     // Dashboard routes
+    registerRoute('/dashboard', () => { window.location.hash = '#/dashboard/gis'; });
     registerRoute('/dashboard/gis', () => renderGIS());
     registerRoute('/dashboard/eksekutif', () => renderEksekutif());
     registerRoute('/dashboard/laporan', () => renderLaporan());
@@ -75,6 +77,7 @@ async function bootstrap() {
     registerRoute('/dashboard/intervensi', () => renderIntervensi());
     registerRoute('/dashboard/masterdata', () => renderMasterData());
     registerRoute('/dashboard/aduan', () => renderAduanManagement());
+    registerRoute('/dashboard/audit', () => renderAuditLog());
 
     // Portal routes
     registerRoute('/portal', () => { renderPortalBeranda(); initPortalNav(); });
@@ -101,10 +104,16 @@ async function bootstrap() {
     if (app) {
       app.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2rem;background:#0a0f1a;color:white">
-          <div>
-            <h1 style="display:flex;align-items:center;justify-content:center;gap:0.5rem;font-size:2rem;margin-bottom:1rem;color:#ef4444">${icons.alert} <span style="color:white">Terjadi Kesalahan</span></h1>
-            <p style="color:#9ca3af;margin-bottom:1.5rem">${error.message}</p>
-            <button onclick="location.reload()" style="padding:0.75rem 2rem;background:#10b981;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem">Muat Ulang</button>
+          <div style="max-width:500px">
+            <h1 style="display:flex;align-items:center;justify-content:center;gap:0.5rem;font-size:2rem;margin-bottom:1rem;color:#ef4444">${icons.alert} <span style="color:white">Terjadi Kesalahan Sistem</span></h1>
+            <p style="color:#9ca3af;margin-bottom:1.5rem">Aplikasi gagal memuat data lokal. Ini mungkin disebabkan oleh pembaruan sistem atau data yang tidak kompatibel.</p>
+            <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);padding:1rem;border-radius:8px;margin-bottom:2rem;text-align:left;font-family:monospace;font-size:0.875rem;color:#f87171">
+              ${error.message}
+            </div>
+            <div style="display:flex;gap:1rem;justify-content:center">
+              <button onclick="location.reload()" style="padding:0.75rem 1.5rem;background:#374151;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;transition:all 0.2s">Muat Ulang</button>
+              <button onclick="indexedDB.deleteDatabase('simpah-db');localStorage.clear();location.reload();" style="padding:0.75rem 1.5rem;background:#ef4444;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px;transition:all 0.2s">${icons.trash} Reset & Perbaiki Sistem</button>
+            </div>
           </div>
         </div>
       `;

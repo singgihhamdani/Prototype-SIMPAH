@@ -7,7 +7,7 @@ import { renderDashboardLayout } from './layout.js';
 
 export async function renderEksekutif() {
   const user = getCurrentUser();
-  if (!user || user.role !== 'dinas') { window.location.hash = '#/dashboard/gis'; return; }
+  if (!user || !['admin', 'eksekutif'].includes(user.role)) { window.location.hash = '#/dashboard/gis'; return; }
 
   const stats = await getWasteStats();
   const mous = await getAllMou();

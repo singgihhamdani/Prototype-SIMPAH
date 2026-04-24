@@ -17,12 +17,13 @@ const LOCATIONS_DATA = [
 ];
 
 const USERS_DATA = [
-  { id: 'usr-01', username: 'kader1', password: 'kader123', name: 'Siti Aminah', role: 'kader', location_id: 'loc-01', phone: '081234567890' },
-  { id: 'usr-02', username: 'kader2', password: 'kader123', name: 'Budi Santoso', role: 'kader', location_id: 'loc-02', phone: '081234567891' },
-  { id: 'usr-03', username: 'petugas1', password: 'petugas123', name: 'Ahmad Fauzi', role: 'petugas', phone: '081234567892' },
-  { id: 'usr-04', username: 'pemdes', password: 'pemdes123', name: 'Pemdes Mandiraja', role: 'pemdes', phone: '081234567893' },
-  { id: 'usr-05', username: 'pengepul1', password: 'pengepul123', name: 'Haji Slamet', role: 'pengepul', location_id: 'loc-07', phone: '081234567894' },
-  { id: 'usr-06', username: 'dinas', password: 'dinas123', name: 'DPPKPLH Banjarnegara', role: 'dinas', phone: '081234567895' }
+  { id: 'usr-01', username: 'warga1', password: 'warga123', name: 'Warga Banjarnegara', role: 'warga', phone: '081234567890' },
+  { id: 'usr-02', username: 'petugas1', password: 'petugas123', name: 'Petugas Pengangkut', role: 'petugas', job_type: 'angkut', location_id: 'loc-01', phone: '081234567891' },
+  { id: 'usr-03', username: 'eksekutif1', password: 'eksekutif123', name: 'Bupati Banjarnegara', role: 'eksekutif', phone: '081234567892' },
+  { id: 'usr-04', username: 'admin1', password: 'admin123', name: 'Admin SIMPAH', role: 'admin', phone: '081234567893' },
+  { id: 'usr-05', username: 'koordinator1', password: 'koordinator123', name: 'Koordinator Lapangan', role: 'petugas', job_type: 'koordinator', location_id: 'loc-01', phone: '081234567894' },
+  { id: 'usr-06', username: 'operator1', password: 'operator123', name: 'Operator TPS3R', role: 'petugas', job_type: 'operator_tps', location_id: 'loc-01', phone: '081234567895' },
+  { id: 'usr-07', username: 'kader1', password: 'kader123', name: 'Kader Lingkungan', role: 'petugas', job_type: 'kader', location_id: 'loc-01', phone: '081234567896' }
 ];
 
 const FLEET_DATA = [
@@ -60,7 +61,7 @@ function generateWasteRecords(count = 120) {
 
     const type = randomFromList(['masuk', 'masuk', 'masuk', 'pilah', 'pilah', 'residu']);
     const location = randomFromList(LOCATIONS_DATA);
-    const user = randomFromList(USERS_DATA.filter(u => u.role !== 'dinas'));
+    const user = randomFromList(USERS_DATA);
     const category = randomFromList(SIPSN_CODES);
 
     const weightRanges = {
@@ -94,6 +95,7 @@ function generateWasteRecords(count = 120) {
         'Banyak plastik kemasan'
       ]) : '',
       created_at: date.toISOString(),
+      created_by: user.id,
       date_str: date.toISOString().split('T')[0],
       synced: Math.random() < 0.85,
       verification_status: 'approved'
@@ -136,21 +138,27 @@ function generateComplaints() {
   return [
     {
       id: 'cmp-001', tracking_number: 'ADU-260401-1234',
+      reporter_user_id: 'usr-01',
       reporter_name: 'Warga RT 05 RW 02', reporter_phone: '081233344455',
+      is_anonymous: false,
       category: 'Sampah menumpuk', description: 'Sampah di TPS depan pasar sudah menumpuk 3 hari tidak diangkut, menimbulkan bau tidak sedap.',
       lat: -7.3920, lng: 109.6935, address: 'TPS Pasar Banjarnegara',
       photo_url: null, status: 'baru', created_at: '2026-04-19T08:30:00.000Z'
     },
     {
       id: 'cmp-002', tracking_number: 'ADU-260402-5678',
+      reporter_user_id: 'usr-01',
       reporter_name: 'Ibu Darmi', reporter_phone: '082199988877',
+      is_anonymous: false,
       category: 'Pembuangan liar', description: 'Ada warga yang membuang sampah ke sungai di belakang perumahan Griya Asri.',
       lat: -7.4010, lng: 109.7020, address: 'Belakang Perumahan Griya Asri',
       photo_url: null, status: 'diproses', created_at: '2026-04-18T14:15:00.000Z'
     },
     {
       id: 'cmp-003', tracking_number: 'ADU-260403-9012',
+      reporter_user_id: null,
       reporter_name: 'Pak Ahmad', reporter_phone: '085677788899',
+      is_anonymous: true,
       category: 'Bau tidak sedap', description: 'Bau dari TPA Winong sangat menyengat ketika angin bertiup ke arah pemukiman.',
       lat: -7.3740, lng: 109.6800, address: 'Sekitar TPA Winong',
       photo_url: null, status: 'selesai', created_at: '2026-04-15T10:00:00.000Z'
@@ -187,15 +195,18 @@ export async function seedDatabase() {
   if (existingUsers > 0) {
     console.log('Database already seeded');
 
-    // MIGRATION: Update legacy bumdes to pemdes so login works on existing databases
-    const user4 = await db.get('users', 'usr-04');
-    if (user4 && user4.role === 'bumdes') {
-      user4.role = 'pemdes';
-      user4.username = 'pemdes';
-      user4.password = 'pemdes123';
-      user4.name = 'Pemdes Mandiraja';
-      await db.put('users', user4);
-      console.log('Successfully migrated legacy BUMDes account to Pemdes');
+    // MIGRATION: Update legacy users to new 4 roles (WARGA, PETUGAS, EKSEKUTIF, ADMIN)
+    const user1 = await db.get('users', 'usr-01');
+    if (user1 && user1.role !== 'warga') {
+      const tx = db.transaction('users', 'readwrite');
+      for (const user of USERS_DATA) {
+        await tx.store.put(user);
+      }
+      // Clean up extra legacy users
+      await tx.store.delete('usr-05');
+      await tx.store.delete('usr-06');
+      await tx.done;
+      console.log('Successfully migrated legacy accounts to 4 roles (warga, petugas, eksekutif, admin)');
     }
 
     return false;

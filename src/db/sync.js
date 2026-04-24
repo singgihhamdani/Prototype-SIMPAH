@@ -36,7 +36,14 @@ export async function triggerSync() {
 
   try {
     const db = await getDB();
-    const unsynced = await db.getAllFromIndex('waste_records', 'synced', false);
+    let unsynced;
+    try {
+      unsynced = await db.getAllFromIndex('waste_records', 'synced', false);
+    } catch (e) {
+      // Fallback: boolean keys may not work in all browsers
+      const all = await db.getAll('waste_records');
+      unsynced = all.filter(r => r.synced === false);
+    }
 
     if (unsynced.length === 0) {
       setState('syncStatus', 'idle');
@@ -71,7 +78,13 @@ export async function triggerSync() {
 async function updatePendingCount() {
   try {
     const db = await getDB();
-    const unsynced = await db.getAllFromIndex('waste_records', 'synced', false);
+    let unsynced;
+    try {
+      unsynced = await db.getAllFromIndex('waste_records', 'synced', false);
+    } catch (e) {
+      const all = await db.getAll('waste_records');
+      unsynced = all.filter(r => r.synced === false);
+    }
     setState('pendingSync', unsynced.length);
   } catch (e) {
     // ignore

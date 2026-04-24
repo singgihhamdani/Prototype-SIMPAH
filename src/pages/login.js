@@ -2,6 +2,7 @@
 import { icons } from '../components/icons.js';
 import { setCurrentUser } from '../utils/helpers.js';
 import { getUserByUsername as dbGetUser } from '../db/store.js';
+import { createAuditEntry } from '../utils/audit.js';
 import { showToast } from '../components/toast.js';
 
 export function renderLogin() {
@@ -50,20 +51,26 @@ export function renderLogin() {
           <div class="login-demo">
             <p>Demo Akun:</p>
             <div class="demo-accounts">
-              <button class="demo-account" data-user="kader1" data-pass="kader123">
-                <span>${icons.leaf}</span> Kader
+              <button class="demo-account" data-user="warga1" data-pass="warga123" style="grid-column: 1 / -1">
+                <span>${icons.users}</span> Warga
               </button>
               <button class="demo-account" data-user="petugas1" data-pass="petugas123">
-                <span>${icons.truck}</span> Petugas
+                <span>${icons.truck}</span> P. Angkut
               </button>
-              <button class="demo-account" data-user="pengepul1" data-pass="pengepul123">
-                <span>${icons.store}</span> Pengepul
+              <button class="demo-account" data-user="koordinator1" data-pass="koordinator123">
+                <span>${icons.checkCircle}</span> Koordinator
               </button>
-              <button class="demo-account" data-user="pemdes" data-pass="pemdes123">
-                <span>${icons.landmark}</span> Pemerintah Desa
+              <button class="demo-account" data-user="operator1" data-pass="operator123">
+                <span>${icons.clipboard}</span> Operator TPS
               </button>
-              <button class="demo-account" style="grid-column: span 2;" data-user="dinas" data-pass="dinas123">
-                <span>${icons.landmark}</span> Dinas (Eksekutor Tetinggi)
+              <button class="demo-account" data-user="kader1" data-pass="kader123">
+                <span>${icons.home}</span> Kader
+              </button>
+              <button class="demo-account" data-user="eksekutif1" data-pass="eksekutif123">
+                <span>${icons.chart}</span> Eksekutif
+              </button>
+              <button class="demo-account" data-user="admin1" data-pass="admin123">
+                <span>${icons.shield}</span> Admin
               </button>
             </div>
           </div>
@@ -136,17 +143,20 @@ async function handleLogin(e) {
     }
 
     setCurrentUser(user);
+    await createAuditEntry('users', user.id, 'login', user.id, { role: user.role, job_type: user.job_type || null });
     showToast(`Selamat datang, ${user.name}!`, 'success');
 
     // Navigate based on role
     setTimeout(() => {
       switch (user.role) {
-        case 'dinas':
+        case 'eksekutif':
           window.location.hash = '#/dashboard/eksekutif';
           break;
-        case 'pemdes':
-          window.location.hash = '#/dashboard/gis';
+        case 'admin':
+          window.location.hash = '#/dashboard';
           break;
+        case 'petugas':
+        case 'warga':
         default:
           window.location.hash = '#/pwa/home';
       }

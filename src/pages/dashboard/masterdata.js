@@ -2,6 +2,7 @@
 import { icons } from '../../components/icons.js';
 import { getCurrentUser } from '../../utils/helpers.js';
 import { LOCATION_TYPES, USER_ROLES } from '../../utils/sipsn.js';
+import { JOB_TYPES } from '../../utils/permissions.js';
 import { showToast } from '../../components/toast.js';
 import { renderDashboardLayout } from './layout.js';
 import {
@@ -12,7 +13,7 @@ import {
 
 export async function renderMasterData() {
   const user = getCurrentUser();
-  if (!user || user.role !== 'dinas') {
+  if (!user || user.role !== 'admin') {
     window.location.hash = '#/dashboard/gis';
     return;
   }
@@ -316,7 +317,7 @@ export async function renderMasterData() {
   // ---------- USERS TAB ----------
   async function renderUsersTab(container) {
     const users = await getAllUsers();
-    const roleColors = { kader: 'green', petugas: 'amber', pemdes: 'blue', pengepul: 'purple', dinas: 'red' };
+    const roleColors = { warga: 'green', petugas: 'amber', eksekutif: 'blue', admin: 'purple' };
     const roleLabels = {};
     USER_ROLES.forEach(r => { roleLabels[r.id] = r.label; });
     container.innerHTML = `
@@ -338,7 +339,7 @@ export async function renderMasterData() {
               <td>${u.wilayah || '-'}</td>
               <td><div class="md-actions">
                 <button class="md-btn-icon" title="Edit" data-edit-user="${u.id}">${icons.edit}</button>
-                ${u.role !== 'dinas' ? `<button class="md-btn-icon danger" title="Hapus" data-del-user="${u.id}">${icons.trash}</button>` : ''}
+                ${u.role !== 'admin' ? `<button class="md-btn-icon danger" title="Hapus" data-del-user="${u.id}">${icons.trash}</button>` : ''}
               </div></td>
             </tr>`).join('')}
         </tbody>
@@ -383,6 +384,13 @@ export async function renderMasterData() {
             ${USER_ROLES.map(r => `<option value="${r.id}" ${existing?.role === r.id ? 'selected' : ''}>${r.label}</option>`).join('')}
           </select>
         </div>
+        <div class="form-group" id="jobTypeGroup" style="display:${existing?.role === 'petugas' || !existing ? 'block' : 'none'}">
+          <label class="form-label">Tipe Tugas (untuk Petugas)</label>
+          <select class="form-select" id="userJobType">
+            <option value="">(Tidak ditentukan)</option>
+            ${JOB_TYPES.map(j => `<option value="${j.id}" ${existing?.job_type === j.id ? 'selected' : ''}>${j.label} — ${j.desc}</option>`).join('')}
+          </select>
+        </div>
         <div class="form-group">
           <label class="form-label">Wilayah (opsional)</label>
           <input class="form-input" id="userWilayah" value="${existing?.wilayah || ''}" placeholder="Misal: Banjarnegara" />
@@ -393,15 +401,24 @@ export async function renderMasterData() {
         </div>
       </form>
     `);
+    // Toggle job_type visibility based on role
+    const roleSelect = document.getElementById('userRole');
+    const jobTypeGroup = document.getElementById('jobTypeGroup');
+    roleSelect?.addEventListener('change', () => {
+      jobTypeGroup.style.display = roleSelect.value === 'petugas' ? 'block' : 'none';
+    });
+
     document.getElementById('userForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const role = document.getElementById('userRole').value;
       const roleInfo = USER_ROLES.find(r => r.id === role);
+      const jobType = document.getElementById('userJobType')?.value || null;
       const data = {
         name: document.getElementById('userName').value.trim(),
         username: document.getElementById('userUsername').value.trim().toLowerCase(),
         role: role,
         role_icon: roleInfo?.icon || '',
+        job_type: role === 'petugas' ? jobType : null,
         wilayah: document.getElementById('userWilayah').value.trim()
       };
       const pw = document.getElementById('userPassword').value;

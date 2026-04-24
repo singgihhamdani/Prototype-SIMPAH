@@ -3,6 +3,7 @@ import { icons } from '../../components/icons.js';
 import { getCurrentPosition } from '../../utils/gps.js';
 import { addComplaint } from '../../db/store.js';
 import { showToast } from '../../components/toast.js';
+import { getCurrentUser } from '../../utils/helpers.js';
 import { renderPortalNav, renderPortalFooter, initPortalNav } from './beranda.js';
 
 export function renderAduan() {
@@ -46,6 +47,13 @@ export function renderAduan() {
               <div class="form-group">
                 <label class="form-label">No. Telepon</label>
                 <input type="tel" id="reporterPhone" class="form-input" placeholder="08xxxxxxxxxx" />
+              </div>
+
+              <div class="form-group" style="display:flex;align-items:center;gap:8px;background:rgba(107,114,128,0.05);padding:var(--space-3);border-radius:var(--radius-md);">
+                <input type="checkbox" id="isAnonymous" style="width:18px;height:18px;accent-color:var(--primary-500)" />
+                <label for="isAnonymous" style="margin:0;font-size:var(--font-sm);color:var(--text-primary);cursor:pointer">
+                  Kirim sebagai Anonim (sembunyikan nama & nomor kontak)
+                </label>
               </div>
 
               <div class="form-group">
@@ -156,16 +164,18 @@ export function renderAduan() {
     btn.disabled = true;
 
     try {
+      const user = getCurrentUser();
       const result = await addComplaint({
         reporter_name: document.getElementById('reporterName').value.trim() || 'Anonim',
         reporter_phone: document.getElementById('reporterPhone').value.trim(),
+        is_anonymous: document.getElementById('isAnonymous').checked,
         category: document.getElementById('complaintCategory').value,
         description: document.getElementById('complaintDesc').value.trim(),
         address: document.getElementById('complaintAddress').value.trim(),
         lat: gpsData?.latitude || null,
         lng: gpsData?.longitude || null,
         photo_url: previewImg?.src || null
-      });
+      }, user?.id || null);
 
       document.getElementById('complaintFormCard').style.display = 'none';
       document.getElementById('complaintSuccess').style.display = 'block';

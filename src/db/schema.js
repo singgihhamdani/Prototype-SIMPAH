@@ -2,7 +2,7 @@
 import { openDB } from 'idb';
 
 const DB_NAME = 'simpah-db';
-const DB_VERSION = 2;
+const DB_VERSION = 5;
 
 export async function initDB() {
   const db = await openDB(DB_NAME, DB_VERSION, {
@@ -33,6 +33,14 @@ export async function initDB() {
         if (!wasteStore.indexNames.contains('verification_status')) {
           wasteStore.createIndex('verification_status', 'verification_status');
         }
+      }
+
+      // Upgrade Path for v4: Clear old data to force fresh seed of RBAC and job_types
+      if (oldVersion > 0 && oldVersion < 4) {
+        const tx = event.target.transaction;
+        if (db.objectStoreNames.contains('users')) tx.objectStore('users').clear();
+        if (db.objectStoreNames.contains('complaints')) tx.objectStore('complaints').clear();
+        if (db.objectStoreNames.contains('waste_records')) tx.objectStore('waste_records').clear();
       }
 
       // Sorted Waste (Pilah details)

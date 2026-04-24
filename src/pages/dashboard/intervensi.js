@@ -12,7 +12,7 @@ let selectedVillage = null;
 
 export async function renderIntervensi() {
   const user = getCurrentUser();
-  if (!user || user.role !== 'dinas') { window.location.hash = '#/dashboard/gis'; return; }
+  if (!user || user.role !== 'admin') { window.location.hash = '#/dashboard/gis'; return; }
 
   villageProfiles = await getVillageProfiles();
   selectedVillage = null;

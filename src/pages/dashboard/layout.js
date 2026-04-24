@@ -2,6 +2,7 @@
 import { icons } from '../../components/icons.js';
 import { getCurrentUser, toggleTheme, getState, logout } from '../../utils/helpers.js';
 import { isActiveRoute } from '../../router.js';
+import { canValidate, isAdmin, canViewExecutive } from '../../utils/permissions.js';
 
 export function renderDashboardLayout(title, content, activeMenu = '') {
   const user = getCurrentUser();
@@ -20,45 +21,53 @@ export function renderDashboardLayout(title, content, activeMenu = '') {
         </div>
         <nav class="sidebar-nav">
           <div class="sidebar-section">
-            <div class="sidebar-section-title">Dashboard</div>
-            ${user?.role === 'dinas' ? `
+            <div class="sidebar-section-title">Pemantauan</div>
+            ${canViewExecutive(user) ? `
             <a href="#/dashboard/eksekutif" class="sidebar-link ${activeMenu === 'eksekutif' ? 'active' : ''}">
-              ${icons.chart} <span>Eksekutif</span>
-            </a>
-            ` : ''}
+              ${icons.chart} <span>Ringkasan Eksekutif</span>
+            </a>` : ''}
             <a href="#/dashboard/gis" class="sidebar-link ${activeMenu === 'gis' ? 'active' : ''}">
               ${icons.map} <span>Peta GIS</span>
             </a>
           </div>
-          ${user?.role === 'dinas' ? `
+           ${(isAdmin(user) || canValidate(user)) ? `
           <div class="sidebar-section">
             <div class="sidebar-section-title">Pengelolaan</div>
+            ${isAdmin(user) ? `
             <a href="#/dashboard/laporan" class="sidebar-link ${activeMenu === 'laporan' ? 'active' : ''}">
               ${icons.file} <span>Laporan & Export</span>
-            </a>
+            </a>` : ''}
+            ${canValidate(user) ? `
             <a href="#/dashboard/validasi" class="sidebar-link ${activeMenu === 'validasi' ? 'active' : ''}">
               ${icons.checkCircle} <span>Validasi Data</span>
-            </a>
+            </a>` : ''}
+            ${isAdmin(user) ? `
             <a href="#/dashboard/mou" class="sidebar-link ${activeMenu === 'mou' ? 'active' : ''}">
               ${icons.clipboard} <span>Manajemen MoU</span>
             </a>
             <a href="#/dashboard/intervensi" class="sidebar-link ${activeMenu === 'intervensi' ? 'active' : ''}">
               ${icons.shield} <span>Intervensi Desa</span>
             </a>
-            <a href="#/dashboard/aduan" class="sidebar-link ${activeMenu === 'aduan' ? 'active' : ''}">
-              ${icons.messageCircle} <span>Aduan Warga</span>
-            </a>
             <a href="#/dashboard/masterdata" class="sidebar-link ${activeMenu === 'masterdata' ? 'active' : ''}">
               ${icons.settings} <span>Master Data</span>
             </a>
+            <a href="#/dashboard/audit" class="sidebar-link ${activeMenu === 'audit' ? 'active' : ''}">
+              ${icons.activity} <span>Audit Log</span>
+            </a>` : ''}
           </div>
           ` : ''}
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Layanan</div>
+            <a href="#/dashboard/aduan" class="sidebar-link ${activeMenu === 'aduan' ? 'active' : ''}">
+              ${icons.messageCircle} <span>Aduan Warga</span>
+            </a>
+          </div>
           <div class="sidebar-section">
             <div class="sidebar-section-title">Operasional</div>
             <a href="#/pwa/home" class="sidebar-link ${activeMenu === 'pwa' ? 'active' : ''}">
               ${icons.activity} <span>Input Lapangan</span>
             </a>
-            <a href="#/portal" class="sidebar-link ${activeMenu === 'portal' ? 'active' : ''}">
+            <a href="#/portal" class="sidebar-link ${activeMenu === 'portal' ? 'active' : ''}" id="dashPortalLink">
               ${icons.globe} <span>Portal Publik</span>
             </a>
           </div>
@@ -126,9 +135,16 @@ export function renderDashboardLayout(title, content, activeMenu = '') {
 
   // Logout
   document.getElementById('dashLogoutBtn')?.addEventListener('click', () => logout());
+
+  // Portal Confirmation
+  document.getElementById('dashPortalLink')?.addEventListener('click', (e) => {
+    if (!confirm('Anda akan keluar dari area Dasbor menuju Portal Publik. Lanjutkan?')) {
+      e.preventDefault();
+    }
+  });
 }
 
 function getRoleName(role) {
-  const names = { kader: 'Kader Lingkungan', petugas: 'Petugas Pengangkut', pemdes: 'Pemerintah Desa', pengepul: 'Pengepul', dinas: 'Dinas Lingkungan' };
+  const names = { warga: 'Warga', petugas: 'Petugas Pengangkut', eksekutif: 'Eksekutif', admin: 'Administrator' };
   return names[role] || 'User';
 }

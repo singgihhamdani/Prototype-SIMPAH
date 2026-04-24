@@ -1,9 +1,11 @@
-// SIMPAH - Manajemen Aduan (Dinas Complaint Management)
+// SIMPAH - Manajemen Aduan (Complaint Management with Privacy Controls)
 import { icons } from '../../components/icons.js';
 import { getCurrentUser } from '../../utils/helpers.js';
-import { getAllComplaints, updateComplaint } from '../../db/store.js';
+import { getAllComplaints, getComplaintsByUser, updateComplaint } from '../../db/store.js';
+import { hasPermission } from '../../utils/permissions.js';
 import { showToast } from '../../components/toast.js';
 import { renderDashboardLayout } from './layout.js';
+import { renderPWALayout } from '../pwa/layout.js';
 
 const STATUS_CONFIG = {
   baru: { label: 'Baru', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', icon: icons.download },
@@ -15,17 +17,25 @@ const STATUS_CONFIG = {
 
 export async function renderAduanManagement() {
   const user = getCurrentUser();
-  if (!user || user.role !== 'dinas') {
-    window.location.hash = '#/dashboard/gis';
+  if (!user) {
+    window.location.hash = '#/login';
     return;
   }
+  const canViewAll = hasPermission(user, 'VIEW_ALL_COMPLAINTS');
+  const canManage = hasPermission(user, 'MANAGE_COMPLAINT_STATUS');
+  const pageTitle = canViewAll ? 'Manajemen Aduan Warga' : 'Aduan Saya';
+  const pageDesc = canViewAll
+    ? 'Pantau, proses, dan tindak lanjuti laporan dari masyarakat.'
+    : 'Lihat status dan riwayat aduan yang Anda buat.';
 
-  renderDashboardLayout('Aduan Warga', `
+  const renderLayout = ['warga', 'petugas'].includes(user.role) ? renderPWALayout : renderDashboardLayout;
+
+  renderLayout('Aduan Warga', `
     <div class="aduan-mgmt page-enter">
       <div class="am-header">
         <div>
-          <h2 style="display:flex;align-items:center;gap:8px;">${icons.clipboard} Manajemen Aduan Warga</h2>
-          <p>Pantau, proses, dan tindak lanjuti laporan dari masyarakat.</p>
+          <h2 style="display:flex;align-items:center;gap:8px;">${icons.clipboard} ${pageTitle}</h2>
+          <p>${pageDesc}</p>
         </div>
       </div>
 
@@ -102,7 +112,10 @@ export async function renderAduanManagement() {
     </style>
   `);
 
-  let allComplaints = await getAllComplaints();
+  // Load complaints based on role/permissions
+  let allComplaints = canViewAll
+    ? await getAllComplaints()
+    : await getComplaintsByUser(user.id);
   let activeFilter = 'all';
 
   // Render stats
@@ -130,6 +143,7 @@ export async function renderAduanManagement() {
     container.innerHTML = filtered.map(c => {
       const cfg = STATUS_CONFIG[c.status] || STATUS_CONFIG.baru;
       const dt = new Date(c.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      const reporterDisplay = getReporterDisplay(c, canViewAll);
       return `
         <div class="am-card" data-id="${c.id}">
           <div class="am-card-top">
@@ -139,7 +153,7 @@ export async function renderAduanManagement() {
           <div class="am-card-cat">${c.category}</div>
           <div class="am-card-desc">${c.description}</div>
           <div class="am-card-footer">
-            <span class="am-card-reporter" style="display:inline-flex;align-items:center;gap:4px;">${icons.user} ${c.reporter_name || 'Anonim'}${c.reporter_phone ? ' • ' + c.reporter_phone : ''}</span>
+            <span class="am-card-reporter" style="display:inline-flex;align-items:center;gap:4px;">${icons.user} ${reporterDisplay}</span>
             <span class="am-card-date">${dt}</span>
           </div>
         </div>
@@ -173,20 +187,23 @@ export async function renderAduanManagement() {
     const dt = new Date(c.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
     document.getElementById('aduanModalTitle').textContent = `Detail: ${c.tracking_number}`;
+    const detailReporter = getReporterDisplay(c, canViewAll);
     document.getElementById('aduanModalBody').innerHTML = `
       <div class="am-detail-row"><span class="am-detail-label">Resi</span><span class="am-detail-value" style="letter-spacing:0.06em">${c.tracking_number}</span></div>
       <div class="am-detail-row"><span class="am-detail-label">Status</span><span class="am-detail-value"><span class="am-badge" style="background:${cfg.bg};color:${cfg.color}">${cfg.icon} ${cfg.label}</span></span></div>
       <div class="am-detail-row"><span class="am-detail-label">Kategori</span><span class="am-detail-value">${c.category}</span></div>
-      <div class="am-detail-row"><span class="am-detail-label">Pelapor</span><span class="am-detail-value">${c.reporter_name || 'Anonim'}</span></div>
-      <div class="am-detail-row"><span class="am-detail-label">Telepon</span><span class="am-detail-value">${c.reporter_phone || '-'}</span></div>
+      <div class="am-detail-row"><span class="am-detail-label">Pelapor</span><span class="am-detail-value">${detailReporter}</span></div>
+      ${canViewAll && !c.is_anonymous ? `<div class="am-detail-row"><span class="am-detail-label">Telepon</span><span class="am-detail-value">${c.reporter_phone || '-'}</span></div>` : ''}
       <div class="am-detail-row"><span class="am-detail-label">Tanggal</span><span class="am-detail-value">${dt}</span></div>
       <div class="am-detail-row"><span class="am-detail-label">Alamat</span><span class="am-detail-value">${c.address || '-'}</span></div>
       ${c.lat ? `<div class="am-detail-row"><span class="am-detail-label">GPS</span><span class="am-detail-value" style="font-size:var(--font-xs)">${Number(c.lat).toFixed(6)}, ${Number(c.lng).toFixed(6)}</span></div>` : ''}
+      ${c.is_anonymous ? '<div class="am-detail-row"><span class="am-detail-label">Mode</span><span class="am-detail-value"><span class="am-badge" style="background:rgba(107,114,128,0.1);color:#6b7280">🔒 Anonim</span></span></div>' : ''}
 
       <div class="am-desc-box"><strong>Deskripsi:</strong><br/>${c.description}</div>
 
       ${c.response ? `<div class="am-desc-box" style="border-left:3px solid var(--primary-500)"><strong><span style="display:inline-flex;align-items:center;gap:4px;vertical-align:-4px">${icons.messageCircle}</span> Tanggapan Dinas:</strong><br/>${c.response}</div>` : ''}
 
+      ${canManage ? `
       <div class="am-action-section">
         <h4>Ubah Status</h4>
         <div class="am-action-btns">
@@ -200,6 +217,7 @@ export async function renderAduanManagement() {
         </div>
         <button class="btn btn-primary btn-block" id="saveStatusBtn" style="margin-top:var(--space-3);display:flex;align-items:center;justify-content:center;gap:8px;">${icons.checkCircle} Simpan Perubahan</button>
       </div>
+      ` : ''}
     `;
     document.getElementById('aduanModal').style.display = 'flex';
 
@@ -216,7 +234,9 @@ export async function renderAduanManagement() {
       const response = document.getElementById('responseInput')?.value.trim();
       try {
         await updateComplaint(c.id, { status: selectedStatus, response: response || c.response });
-        allComplaints = await getAllComplaints();
+        allComplaints = canViewAll
+          ? await getAllComplaints()
+          : await getComplaintsByUser(user.id);
         showToast(`Status aduan diperbarui ke "${STATUS_CONFIG[selectedStatus].label}"`, 'success');
         closeModal();
         renderStats();
@@ -229,4 +249,28 @@ export async function renderAduanManagement() {
 
   renderStats();
   renderList();
+}
+
+/**
+ * Privacy-aware reporter display
+ * - Admin (canViewAll=true): Shows full name + phone
+ * - Non-admin: Shows masked name, no phone
+ * - Anonymous complaints: Shows "Anonim" for everyone
+ */
+function getReporterDisplay(complaint, canViewAll) {
+  if (complaint.is_anonymous) {
+    return '\ud83d\udd12 Pelapor Anonim';
+  }
+
+  if (canViewAll) {
+    // Admin can see everything
+    const name = complaint.reporter_name || 'Tidak diketahui';
+    const phone = complaint.reporter_phone ? ' \u2022 ' + complaint.reporter_phone : '';
+    return `${name}${phone}`;
+  }
+
+  // Non-admin: mask the name, hide phone
+  const name = complaint.reporter_name || 'Pelapor';
+  if (name.length <= 3) return name;
+  return name.charAt(0) + '*'.repeat(name.length - 2) + name.charAt(name.length - 1);
 }

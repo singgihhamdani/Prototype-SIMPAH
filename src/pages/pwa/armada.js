@@ -16,7 +16,7 @@ export async function renderArmada() {
     <div class="page-enter">
       <div class="section-header">
         <h3 style="font-size:var(--font-base);font-weight:700">Daftar Kendaraan</h3>
-        ${['dinas', 'pemdes'].includes(user.role) ? `<button class="btn btn-primary btn-sm" id="addFleetBtn">${icons.plus} Tambah</button>` : ''}
+        ${user.role === 'admin' ? `<button class="btn btn-primary btn-sm" id="addFleetBtn">${icons.plus} Tambah</button>` : ''}
       </div>
 
       <div class="record-list" id="fleetList">
@@ -52,7 +52,7 @@ export async function renderArmada() {
       </div>
     </div>
 
-    ${['dinas', 'pemdes'].includes(user.role) ? `
+    ${user.role === 'admin' ? `
     <!-- Add Fleet Form (hidden) -->
     <div class="pwa-form" id="addFleetForm" style="display:none;margin-top:var(--space-4)">
       <h3 class="pwa-form-title">${icons.truck} Tambah Kendaraan Baru</h3>

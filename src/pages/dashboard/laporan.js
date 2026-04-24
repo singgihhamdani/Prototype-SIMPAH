@@ -8,7 +8,7 @@ import { renderDashboardLayout } from './layout.js';
 
 export async function renderLaporan() {
   const user = getCurrentUser();
-  if (!user || user.role !== 'dinas') { window.location.hash = '#/dashboard/gis'; return; }
+  if (!user || user.role !== 'admin') { window.location.hash = '#/dashboard/gis'; return; }
 
   const records = await getAllWasteRecords();
   const sorted = records.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));

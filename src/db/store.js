@@ -52,6 +52,7 @@ export async function addWasteRecord(record, userId) {
     ...record,
     id: record.id || generateId(),
     created_at: recordDate.toISOString(),
+    created_by: userId || 'system',
     date_str: recordDate.toISOString().split('T')[0],
     synced: false,
     verification_status: 'pending' // Anti-fraud: new records require Dinas approval
@@ -196,20 +197,30 @@ export async function getAllComplaints() {
   return getAll('complaints');
 }
 
+export async function getComplaintsByUser(userId) {
+  const all = await getAll('complaints');
+  return all.filter(c => c.reporter_user_id === userId);
+}
+
 export async function getComplaintByTracking(trackingNumber) {
   const all = await getAll('complaints');
   return all.find(c => c.tracking_number === trackingNumber) || null;
 }
 
-export async function addComplaint(complaint) {
+export async function addComplaint(complaint, userId = null) {
   const data = {
     ...complaint,
     id: complaint.id || generateId(),
     tracking_number: generateTrackingNumber(),
+    reporter_user_id: userId,
+    is_anonymous: complaint.is_anonymous || false,
     status: 'baru',
     created_at: new Date().toISOString()
   };
   await put('complaints', data);
+  if (userId) {
+    await createAuditEntry('complaints', data.id, 'create', userId, { tracking: data.tracking_number, category: data.category });
+  }
   return data;
 }
 

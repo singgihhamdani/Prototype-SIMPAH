@@ -51,11 +51,10 @@ export const INCIDENTAL_TYPES = [
 ];
 
 export const USER_ROLES = [
-  { id: 'kader', label: 'Kader Lingkungan', icon: icons.users },
-  { id: 'petugas', label: 'Petugas Pengangkut', icon: icons.truck },
-  { id: 'pemdes', label: 'Pemerintah Desa', icon: icons.shield },
-  { id: 'pengepul', label: 'Pengepul', icon: icons.briefcase },
-  { id: 'dinas', label: 'Dinas Lingkungan', icon: icons.shield }
+  { id: 'warga', label: 'Warga', icon: icons.users },
+  { id: 'petugas', label: 'Petugas Lapangan', icon: icons.truck },
+  { id: 'eksekutif', label: 'Eksekutif', icon: icons.chart },
+  { id: 'admin', label: 'Administrator', icon: icons.shield }
 ];
 
 export function getCategoryByCode(code) {

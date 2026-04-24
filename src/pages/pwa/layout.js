@@ -13,8 +13,8 @@ export function renderPWALayout(title, content, activeTab = 'home') {
       <div class="pwa-header">
         <div class="pwa-header-left">
           ${title !== 'Beranda' ? `<button class="pwa-header-back" onclick="history.back()">${icons.chevronLeft}</button>` : 
-            (['dinas', 'pemdes'].includes(user?.role) ? `
-              <a href="${user?.role === 'dinas' ? '#/dashboard/eksekutif' : '#/dashboard/gis'}" class="pwa-header-back" style="text-decoration:none;display:flex;align-items:center;color:var(--text-secondary)" title="Kembali ke Dashboard">
+            (['eksekutif', 'admin'].includes(user?.role) ? `
+              <a href="${user?.role === 'eksekutif' ? '#/dashboard/eksekutif' : '#/dashboard'}" class="pwa-header-back" style="text-decoration:none;display:flex;align-items:center;color:var(--text-secondary)" title="Kembali ke Dashboard">
                 ${icons.chevronLeft}
               </a>
             ` : `
@@ -44,15 +44,17 @@ export function renderPWALayout(title, content, activeTab = 'home') {
           ${icons.home}
           <span>Beranda</span>
         </a>
+        ${user?.role !== 'warga' ? `
         <a href="#/pwa/riwayat" class="bottom-nav-item ${activeTab === 'riwayat' ? 'active' : ''}">
           ${icons.clock}
           <span>Riwayat</span>
         </a>
-        <a href="${user?.role === 'petugas' ? '#/pwa/input-residu' : user?.role === 'pengepul' ? '#/pwa/input-pilah' : '#/pwa/input-sampah'}" class="bottom-nav-add">
+        ` : ''}
+        <a href="${['petugas', 'admin'].includes(user?.role) ? '#/pwa/input-sampah' : '#/dashboard/aduan'}" class="bottom-nav-add">
           ${icons.plus}
         </a>
-        ${['dinas', 'pemdes'].includes(user?.role) ? `
-        <a href="${user?.role === 'dinas' ? '#/dashboard/eksekutif' : '#/dashboard/gis'}" class="bottom-nav-item">
+        ${['eksekutif', 'admin'].includes(user?.role) ? `
+        <a href="${user?.role === 'eksekutif' ? '#/dashboard/eksekutif' : '#/dashboard'}" class="bottom-nav-item">
           ${icons.chart}
           <span>Dashboard</span>
         </a>
@@ -62,7 +64,7 @@ export function renderPWALayout(title, content, activeTab = 'home') {
           <span>Peta</span>
         </a>
         `}
-        <a href="#/portal" class="bottom-nav-item ${activeTab === 'portal' ? 'active' : ''}">
+        <a href="#/portal" class="bottom-nav-item ${activeTab === 'portal' ? 'active' : ''}" id="pwaPortalLink">
           ${icons.globe}
           <span>Portal</span>
         </a>
@@ -89,5 +91,14 @@ export function renderPWALayout(title, content, activeTab = 'home') {
   const logoutBtn = document.getElementById('pwaLogoutBtn');
   if (logoutBtn) {
     logoutBtn.onclick = () => logout();
+  }
+
+  const portalLink = document.getElementById('pwaPortalLink');
+  if (portalLink) {
+    portalLink.addEventListener('click', (e) => {
+      if (!confirm('Anda akan keluar dari aplikasi dan menuju Portal Publik. Lanjutkan?')) {
+        e.preventDefault();
+      }
+    });
   }
 }

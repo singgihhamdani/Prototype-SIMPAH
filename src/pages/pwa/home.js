@@ -2,6 +2,7 @@
 import { icons } from '../../components/icons.js';
 import { getCurrentUser, formatWeight, formatNumber, getState, onStateChange } from '../../utils/helpers.js';
 import { getWasteStats } from '../../db/store.js';
+import { canInputWaste, getAllowedInputTypes, hasPermission, canValidate } from '../../utils/permissions.js';
 import { renderPWALayout } from './layout.js';
 
 export async function renderPWAHome() {
@@ -53,46 +54,62 @@ export async function renderPWAHome() {
       <h3 style="font-size:var(--font-base);font-weight:700">Menu Cepat</h3>
     </div>
     <div class="quick-actions page-enter stagger-2" style="animation-fill-mode:both">
-      ${['kader', 'pemdes', 'dinas'].includes(user.role) ? `
-      <a href="#/pwa/input-sampah" class="quick-action-btn">
-        <div class="quick-action-icon green">${icons.trashIn}</div>
-        <span class="quick-action-label">Sampah Masuk</span>
+      ${canInputWaste(user) ? (() => {
+        const allowed = getAllowedInputTypes(user);
+        let buttons = '';
+        if (allowed.includes('masuk')) buttons += `
+        <a href="#/pwa/input-sampah" class="quick-action-btn">
+          <div class="quick-action-icon green">${icons.trashIn}</div>
+          <span class="quick-action-label">Sampah Masuk</span>
+        </a>`;
+        if (allowed.includes('pilah')) buttons += `
+        <a href="#/pwa/input-pilah" class="quick-action-btn">
+          <div class="quick-action-icon blue">${icons.recycle}</div>
+          <span class="quick-action-label">Pilah Sampah</span>
+        </a>`;
+        if (allowed.includes('olah')) buttons += `
+        <a href="#/pwa/input-olah" class="quick-action-btn">
+          <div class="quick-action-icon" style="background:rgba(245,158,11,0.12);color:#d97706">${icons.refreshCw}</div>
+          <span class="quick-action-label">Olah Sampah</span>
+        </a>`;
+        if (allowed.includes('residu')) buttons += `
+        <a href="#/pwa/input-residu" class="quick-action-btn">
+          <div class="quick-action-icon red">${icons.residue}</div>
+          <span class="quick-action-label">Residu</span>
+        </a>`;
+        if (allowed.includes('armada')) buttons += `
+        <a href="#/pwa/armada" class="quick-action-btn">
+          <div class="quick-action-icon amber">${icons.truck}</div>
+          <span class="quick-action-label">Armada</span>
+        </a>`;
+        if (allowed.includes('insidental')) buttons += `
+        <a href="#/pwa/insidental" class="quick-action-btn">
+          <div class="quick-action-icon purple">${icons.alert}</div>
+          <span class="quick-action-label">Insidental</span>
+        </a>`;
+        return buttons;
+      })() : ''}
+      ${canValidate(user) ? `
+      <a href="#/dashboard/validasi" class="quick-action-btn" style="border:1px solid var(--primary-500);background:rgba(16,185,129,0.05)">
+        <div class="quick-action-icon" style="background:var(--primary-500);color:white;box-shadow:0 4px 12px rgba(16,185,129,0.3)">${icons.checkCircle}</div>
+        <span class="quick-action-label" style="font-weight:700">Validasi Data</span>
       </a>
       ` : ''}
-      ${['kader', 'pengepul', 'pemdes', 'dinas'].includes(user.role) ? `
-      <a href="#/pwa/input-pilah" class="quick-action-btn">
-        <div class="quick-action-icon blue">${icons.recycle}</div>
-        <span class="quick-action-label">Pilah Sampah</span>
+      ${user?.job_type !== 'angkut' ? `
+      <a href="#/dashboard/aduan" class="quick-action-btn">
+        <div class="quick-action-icon teal">${icons.messageCircle}</div>
+        <span class="quick-action-label">Aduan</span>
       </a>
       ` : ''}
-      ${['kader', 'pemdes', 'dinas'].includes(user.role) ? `
-      <a href="#/pwa/input-olah" class="quick-action-btn">
-        <div class="quick-action-icon" style="background:rgba(245,158,11,0.12);color:#d97706">${icons.refreshCw}</div>
-        <span class="quick-action-label">Olah Sampah</span>
-      </a>
-      ` : ''}
-      ${['petugas', 'pemdes', 'dinas'].includes(user.role) ? `
-      <a href="#/pwa/input-residu" class="quick-action-btn">
-        <div class="quick-action-icon red">${icons.residue}</div>
-        <span class="quick-action-label">Residu</span>
-      </a>
-      <a href="#/pwa/armada" class="quick-action-btn">
-        <div class="quick-action-icon amber">${icons.truck}</div>
-        <span class="quick-action-label">Armada</span>
-      </a>
-      ` : ''}
-      ${['kader', 'pemdes', 'dinas'].includes(user.role) ? `
-      <a href="#/pwa/insidental" class="quick-action-btn">
-        <div class="quick-action-icon purple">${icons.alert}</div>
-        <span class="quick-action-label">Insidental</span>
-      </a>
-      ` : ''}
+      ${user?.role !== 'warga' ? `
       <a href="#/pwa/riwayat" class="quick-action-btn">
-        <div class="quick-action-icon teal">${icons.clock}</div>
+        <div class="quick-action-icon" style="background:rgba(107,114,128,0.12);color:#4b5563">${icons.clock}</div>
         <span class="quick-action-label">Riwayat</span>
       </a>
+      ` : ''}
     </div>
 
+    ${user?.role !== 'warga' ? `
     <!-- Recent Records -->
     <div class="section-header">
       <h3 style="font-size:var(--font-base);font-weight:700">Catatan Terakhir</h3>
@@ -116,6 +133,7 @@ export async function renderPWAHome() {
       `).join('')}
       ${stats.records.length === 0 ? '<div class="empty-state"><p>Belum ada catatan</p></div>' : ''}
     </div>
+    ` : ''}
   `, 'home');
 
   // Update sync status listener
