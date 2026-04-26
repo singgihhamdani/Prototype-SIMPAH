@@ -190,10 +190,10 @@ async function renderCharts(stats) {
     new Chart(typeCtx, {
       type: 'bar',
       data: {
-        labels: ['Sampah Masuk', 'Terpilah', 'Residu'],
+        labels: ['Sampah Masuk', 'Terpilah', 'Olah Sampah', 'Residu', 'Insidental'],
         datasets: [{
-          data: [stats.masukWeight, stats.pilahWeight, stats.residuWeight],
-          backgroundColor: ['#10b981', '#3b82f6', '#ef4444'],
+          data: [stats.masukWeight, stats.pilahWeight, stats.olahWeight, stats.residuWeight, stats.insidentalWeight],
+          backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#ef4444', '#f59e0b'],
           borderRadius: 8,
           borderSkipped: false
         }]

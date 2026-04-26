@@ -34,7 +34,9 @@ export async function renderLaporan() {
             <option value="">Semua</option>
             <option value="masuk">Sampah Masuk</option>
             <option value="pilah">Terpilah</option>
+            <option value="olah">Olah Sampah</option>
             <option value="residu">Residu</option>
+            <option value="insidental">Insidental</option>
           </select>
         </div>
         <div class="report-actions">
@@ -110,7 +112,11 @@ function getFilteredRecords(records) {
     filtered = filtered.filter(r => r.date_str?.startsWith(period));
   }
   if (type) {
-    filtered = filtered.filter(r => r.type === type);
+    if (type === 'insidental') {
+      filtered = filtered.filter(r => r.is_incidental);
+    } else {
+      filtered = filtered.filter(r => r.type === type && !r.is_incidental);
+    }
   }
   return filtered;
 }
@@ -123,7 +129,7 @@ function renderReportRows(records) {
     <tr>
       <td>${i + 1}</td>
       <td>${formatDate(r.created_at)}</td>
-      <td><span class="badge ${r.type === 'masuk' ? 'badge-success' : r.type === 'pilah' ? 'badge-info' : 'badge-danger'}">${getTypeLabel(r.type)}</span></td>
+      <td><span class="badge ${r.is_incidental ? 'badge-warning' : r.type === 'masuk' ? 'badge-success' : r.type === 'pilah' ? 'badge-info' : r.type === 'olah' ? 'badge-primary' : 'badge-danger'}">${getTypeLabel(r)}</span></td>
       <td>${r.category_sipsn || '-'}</td>
       <td style="font-weight:600">${formatWeight(r.weight_kg)}</td>
       <td>${r.location_name || '-'}</td>
@@ -139,4 +145,8 @@ function renderReportRows(records) {
   `).join('');
 }
 
-function getTypeLabel(t) { return {masuk:'Masuk',pilah:'Terpilah',residu:'Residu'}[t]||t; }
+function getTypeLabel(r) { 
+  if (r && r.is_incidental) return 'Insidental';
+  const t = typeof r === 'string' ? r : r.type;
+  return {masuk:'Masuk',pilah:'Terpilah',olah:'Olah',residu:'Residu'}[t]||t; 
+}

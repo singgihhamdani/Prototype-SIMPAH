@@ -297,6 +297,7 @@ export async function getWasteStats() {
   const pilahWeight = records.filter(r => r.type === 'pilah').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const olahWeight = records.filter(r => r.type === 'olah').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const residuWeight = records.filter(r => r.type === 'residu').reduce((s, r) => s + (r.weight_kg || 0), 0);
+  const insidentalWeight = records.filter(r => r.is_incidental).reduce((s, r) => s + (r.weight_kg || 0), 0);
 
   // Waste Reduction Rate = (Pilah + Olah) / Masuk × 100
   const reductionTotal = pilahWeight + olahWeight;
@@ -325,6 +326,7 @@ export async function getWasteStats() {
     pilahWeight,
     olahWeight,
     residuWeight,
+    insidentalWeight,
     recycleRate: parseFloat(recycleRate),
     byCategory,
     byTreatment,

@@ -18,7 +18,8 @@ export const WASTE_TYPES = [
   { id: 'masuk', label: 'Sampah Masuk', icon: icons.download, color: 'green' },
   { id: 'pilah', label: 'Sampah Terpilah', icon: icons.layers, color: 'blue' },
   { id: 'olah', label: 'Olah Sampah', icon: icons.activity, color: 'orange' },
-  { id: 'residu', label: 'Residu', icon: icons.trash, color: 'red' }
+  { id: 'residu', label: 'Residu', icon: icons.trash, color: 'red' },
+  { id: 'insidental', label: 'Insidental', icon: icons.alert, color: 'purple' }
 ];
 
 export const TREATMENT_METHODS = [

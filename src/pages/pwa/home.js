@@ -118,11 +118,11 @@ export async function renderPWAHome() {
     <div class="record-list page-enter stagger-3" style="animation-fill-mode:both">
       ${stats.records.slice(0, 5).map(r => `
         <div class="record-item">
-          <div class="record-icon" style="background:${getTypeBg(r.type)}">
-            ${getTypeEmoji(r.type)}
+          <div class="record-icon" style="background:${getTypeBg(r)}">
+            ${getTypeEmoji(r)}
           </div>
           <div class="record-info">
-            <div class="record-title">${getTypeLabel(r.type)} - ${r.category_sipsn || '-'}</div>
+            <div class="record-title">${getTypeLabel(r)} - ${r.category_sipsn || '-'}</div>
             <div class="record-meta">${r.location_name || '-'} · ${timeAgo(r.created_at)}</div>
           </div>
           <div class="record-value" style="display:flex;flex-direction:column;align-items:flex-end">
@@ -148,15 +148,21 @@ export async function renderPWAHome() {
   return unsub;
 }
 
-function getTypeLabel(type) {
+function getTypeLabel(r) {
+  if (r && r.is_incidental) return 'Insidental';
+  const type = typeof r === 'string' ? r : r.type;
   const labels = { masuk: 'Sampah Masuk', pilah: 'Sampah Terpilah', olah: 'Olah Sampah', residu: 'Residu' };
   return labels[type] || type;
 }
-function getTypeEmoji(type) {
+function getTypeEmoji(r) {
+  if (r && r.is_incidental) return icons.alert;
+  const type = typeof r === 'string' ? r : r.type;
   const typeIcons = { masuk: icons.download, pilah: icons.layers, olah: icons.activity, residu: icons.trash };
   return typeIcons[type] || icons.box;
 }
-function getTypeBg(type) {
+function getTypeBg(r) {
+  if (r && r.is_incidental) return 'rgba(168,85,247,0.12)';
+  const type = typeof r === 'string' ? r : r.type;
   const bgs = { masuk: 'rgba(16,185,129,0.12)', pilah: 'rgba(59,130,246,0.12)', olah: 'rgba(245,158,11,0.12)', residu: 'rgba(239,68,68,0.12)' };
   return bgs[type] || 'rgba(107,114,128,0.12)';
 }

@@ -6,6 +6,7 @@ import { getCurrentPosition } from '../../utils/gps.js';
 import { addEvent, getAllEvents } from '../../db/store.js';
 import { showToast } from '../../components/toast.js';
 import { renderPWALayout } from './layout.js';
+import { photoPickerHTML, initPhotoPicker } from '../../components/photo-picker.js';
 
 export async function renderInsidental() {
   const user = getCurrentUser();
@@ -13,6 +14,7 @@ export async function renderInsidental() {
   
   const events = await getAllEvents();
   let gpsData = null;
+  let photoPicker = null;
   getCurrentPosition(false).then(p => { gpsData = p; }).catch(()=>{});
 
   renderPWALayout('Kegiatan Insidental', `
@@ -47,6 +49,7 @@ export async function renderInsidental() {
             <label class="form-label">Deskripsi</label>
             <textarea id="eventDesc" class="form-textarea" rows="3" placeholder="Deskripsi kegiatan..."></textarea>
           </div>
+          ${photoPickerHTML('insidental', false, 3)}
           <button type="submit" class="btn btn-primary btn-lg btn-block">${icons.plus} Simpan Kegiatan</button>
         </form>
       </div>
@@ -63,13 +66,18 @@ export async function renderInsidental() {
                 <div class="record-title">${e.title}</div>
                 <div class="record-meta">${e.location_name || '-'} · ${formatDateTime(e.created_at)}</div>
               </div>
-              <div class="record-value">${e.participants || '-'}<small> orang</small></div>
+              <div class="record-value" style="text-align:right">
+                ${e.photo_count ? `<div style="font-size:11px;color:var(--info-500);margin-bottom:2px">${icons.camera} ${e.photo_count}</div>` : ''}
+                <div>${e.participants || '-'}<small> org</small></div>
+              </div>
             </div>
           `).join('')}
         </div>
       ` : ''}
     </div>
   `);
+
+  photoPicker = initPhotoPicker('insidental');
 
   let selectedType = null;
   document.querySelectorAll('#eventTypeGrid .category-chip').forEach(chip => {
@@ -84,6 +92,7 @@ export async function renderInsidental() {
     e.preventDefault();
     if (!selectedType) { showToast('Pilih jenis kegiatan', 'warning'); return; }
     try {
+      const photos = photoPicker?.getPhotos() || [];
       await addEvent({
         type: selectedType,
         title: document.getElementById('eventTitle').value.trim(),
@@ -91,6 +100,8 @@ export async function renderInsidental() {
         participants: parseInt(document.getElementById('eventParticipants').value) || 0,
         description: document.getElementById('eventDesc').value.trim(),
         lat: gpsData?.latitude, lng: gpsData?.longitude,
+        photos: photos.map(p => ({ dataUrl: p.dataUrl, name: p.name })),
+        photo_count: photos.length,
         user_id: user.id, user_name: user.name
       }, user.id);
       showToast('Kegiatan berhasil dicatat!', 'success');
