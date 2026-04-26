@@ -16,6 +16,7 @@ export const SIPSN_CATEGORIES = [
 
 export const WASTE_TYPES = [
   { id: 'masuk', label: 'Sampah Masuk', icon: icons.download, color: 'green' },
+  { id: 'campur', label: 'Sampah Campur', icon: icons.box, color: 'amber' },
   { id: 'pilah', label: 'Sampah Terpilah', icon: icons.layers, color: 'blue' },
   { id: 'olah', label: 'Olah Sampah', icon: icons.activity, color: 'orange' },
   { id: 'residu', label: 'Residu', icon: icons.trash, color: 'red' },

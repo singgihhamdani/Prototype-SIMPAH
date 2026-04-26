@@ -294,14 +294,16 @@ export async function getWasteStats() {
   const monthWeight = monthRecords.reduce((sum, r) => sum + (r.weight_kg || 0), 0);
 
   const masukWeight = records.filter(r => r.type === 'masuk').reduce((s, r) => s + (r.weight_kg || 0), 0);
+  const campurWeight = records.filter(r => r.type === 'campur').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const pilahWeight = records.filter(r => r.type === 'pilah').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const olahWeight = records.filter(r => r.type === 'olah').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const residuWeight = records.filter(r => r.type === 'residu').reduce((s, r) => s + (r.weight_kg || 0), 0);
   const insidentalWeight = records.filter(r => r.is_incidental).reduce((s, r) => s + (r.weight_kg || 0), 0);
 
-  // Waste Reduction Rate = (Pilah + Olah) / Masuk × 100
+  // Waste Reduction Rate = (Pilah + Olah) / (Masuk + Campur) × 100
   const reductionTotal = pilahWeight + olahWeight;
-  const recycleRate = masukWeight > 0 ? ((reductionTotal / masukWeight) * 100).toFixed(1) : 0;
+  const totalIncoming = masukWeight + campurWeight;
+  const recycleRate = totalIncoming > 0 ? ((reductionTotal / totalIncoming) * 100).toFixed(1) : 0;
 
   const byCategory = {};
   records.forEach(r => {
@@ -323,6 +325,7 @@ export async function getWasteStats() {
     monthWeight,
     todayRecords: todayRecords.length,
     masukWeight,
+    campurWeight,
     pilahWeight,
     olahWeight,
     residuWeight,

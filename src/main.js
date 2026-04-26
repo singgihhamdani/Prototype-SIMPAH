@@ -17,6 +17,7 @@ import { initSync } from './db/sync.js';
 // Pages
 import { renderLogin } from './pages/login.js';
 import { renderPWAHome } from './pages/pwa/home.js';
+import { renderSampahHub } from './pages/pwa/sampah-hub.js';
 import { renderInputSampah } from './pages/pwa/input-sampah.js';
 import { renderInputPilah } from './pages/pwa/input-pilah.js';
 import { renderInputResidu } from './pages/pwa/input-residu.js';
@@ -59,6 +60,7 @@ async function bootstrap() {
 
     // PWA routes
     registerRoute('/pwa/home', () => renderPWAHome());
+    registerRoute('/pwa/sampah-masuk', () => renderSampahHub());
     registerRoute('/pwa/input-sampah', () => renderInputSampah());
     registerRoute('/pwa/input-pilah', () => renderInputPilah());
     registerRoute('/pwa/input-residu', () => renderInputResidu());

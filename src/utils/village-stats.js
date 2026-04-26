@@ -39,6 +39,7 @@ export async function getVillageProfiles() {
       location_names: [],
       // Waste volumes
       total_masuk_kg: 0,
+      total_campur_kg: 0,
       total_pilah_kg: 0,
       total_olah_kg: 0,
       total_residu_kg: 0,
@@ -60,9 +61,10 @@ export async function getVillageProfiles() {
     };
   });
 
-  // Filter out pending and rejected records
+  // Filter out pending and rejected records, and prevent double counting
   const validRecords = records.filter(r => 
-    !r.verification_status || r.verification_status === 'approved'
+    (!r.verification_status || r.verification_status === 'approved') &&
+    r.source_type !== 'fasilitas'
   );
 
   // Aggregate waste records
@@ -77,6 +79,7 @@ export async function getVillageProfiles() {
     p.record_dates.add(r.date_str);
 
     if (r.type === 'masuk') p.total_masuk_kg += r.weight_kg || 0;
+    if (r.type === 'campur') p.total_campur_kg += r.weight_kg || 0;
     if (r.type === 'pilah') p.total_pilah_kg += r.weight_kg || 0;
     if (r.type === 'olah') p.total_olah_kg += r.weight_kg || 0;
     if (r.type === 'residu') p.total_residu_kg += r.weight_kg || 0;
@@ -138,10 +141,10 @@ export async function getVillageProfiles() {
 
   // Calculate derived metrics
   const result = Object.values(profiles).map(p => {
-    const totalMasuk = p.total_masuk_kg || 1;
-    // Waste Reduction Rate = (Pilah + Olah) / Masuk × 100
+    const totalMasuk = (p.total_masuk_kg + p.total_campur_kg) || 1;
+    // Waste Reduction Rate = (Pilah + Olah) / (Masuk + Campur) × 100
     const recycling_rate = ((p.total_pilah_kg + p.total_olah_kg) / totalMasuk) * 100;
-    const residu_rate = (p.total_residu_kg / totalMasuk) * 100;
+    const residu_rate = ((p.total_residu_kg + p.total_campur_kg) / totalMasuk) * 100;
 
     // Trend analysis (last 3 months)
     const sortedMonths = Object.keys(p.monthly_volumes).sort();

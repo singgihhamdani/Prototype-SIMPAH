@@ -265,7 +265,7 @@ export async function renderInputOlah() {
       }
 
       showToast(`${weight} kg berhasil dicatat sebagai ${methodInfo?.label}!`, 'success');
-      setTimeout(() => { window.location.hash = '#/pwa/home'; }, 800);
+      setTimeout(() => { window.location.hash = '#/pwa/sampah-masuk'; }, 800);
     } catch (err) {
       showToast('Gagal: ' + err.message, 'error');
       btn.innerHTML = `${icons.refreshCw} Simpan Pengolahan`;

@@ -33,6 +33,7 @@ export async function renderLaporan() {
           <select id="typeFilter" class="form-select">
             <option value="">Semua</option>
             <option value="masuk">Sampah Masuk</option>
+            <option value="campur">Sampah Campur</option>
             <option value="pilah">Terpilah</option>
             <option value="olah">Olah Sampah</option>
             <option value="residu">Residu</option>
@@ -129,7 +130,7 @@ function renderReportRows(records) {
     <tr>
       <td>${i + 1}</td>
       <td>${formatDate(r.created_at)}</td>
-      <td><span class="badge ${r.is_incidental ? 'badge-warning' : r.type === 'masuk' ? 'badge-success' : r.type === 'pilah' ? 'badge-info' : r.type === 'olah' ? 'badge-primary' : 'badge-danger'}">${getTypeLabel(r)}</span></td>
+      <td><span class="badge ${r.is_incidental ? 'badge-warning' : r.type === 'masuk' ? 'badge-success' : r.type === 'campur' ? 'badge-warning' : r.type === 'pilah' ? 'badge-info' : r.type === 'olah' ? 'badge-primary' : 'badge-danger'}">${getTypeLabel(r)}</span></td>
       <td>${r.category_sipsn || '-'}</td>
       <td style="font-weight:600">${formatWeight(r.weight_kg)}</td>
       <td>${r.location_name || '-'}</td>
@@ -148,5 +149,5 @@ function renderReportRows(records) {
 function getTypeLabel(r) { 
   if (r && r.is_incidental) return 'Insidental';
   const t = typeof r === 'string' ? r : r.type;
-  return {masuk:'Masuk',pilah:'Terpilah',olah:'Olah',residu:'Residu'}[t]||t; 
+  return {masuk:'Masuk',campur:'Campur',pilah:'Terpilah',olah:'Olah',residu:'Residu'}[t]||t; 
 }

@@ -57,25 +57,11 @@ export async function renderPWAHome() {
       ${canInputWaste(user) ? (() => {
         const allowed = getAllowedInputTypes(user);
         let buttons = '';
-        if (allowed.includes('masuk')) buttons += `
-        <a href="#/pwa/input-sampah" class="quick-action-btn">
+        // Single "Sampah Masuk" hub button (combines campur/pilah/olah)
+        if (allowed.includes('masuk') || allowed.includes('pilah') || allowed.includes('olah') || allowed.includes('campur')) buttons += `
+        <a href="#/pwa/sampah-masuk" class="quick-action-btn">
           <div class="quick-action-icon green">${icons.trashIn}</div>
           <span class="quick-action-label">Sampah Masuk</span>
-        </a>`;
-        if (allowed.includes('pilah')) buttons += `
-        <a href="#/pwa/input-pilah" class="quick-action-btn">
-          <div class="quick-action-icon blue">${icons.recycle}</div>
-          <span class="quick-action-label">Pilah Sampah</span>
-        </a>`;
-        if (allowed.includes('olah')) buttons += `
-        <a href="#/pwa/input-olah" class="quick-action-btn">
-          <div class="quick-action-icon" style="background:rgba(245,158,11,0.12);color:#d97706">${icons.refreshCw}</div>
-          <span class="quick-action-label">Olah Sampah</span>
-        </a>`;
-        if (allowed.includes('residu')) buttons += `
-        <a href="#/pwa/input-residu" class="quick-action-btn">
-          <div class="quick-action-icon red">${icons.residue}</div>
-          <span class="quick-action-label">Residu</span>
         </a>`;
         if (allowed.includes('armada')) buttons += `
         <a href="#/pwa/armada" class="quick-action-btn">
@@ -151,19 +137,19 @@ export async function renderPWAHome() {
 function getTypeLabel(r) {
   if (r && r.is_incidental) return 'Insidental';
   const type = typeof r === 'string' ? r : r.type;
-  const labels = { masuk: 'Sampah Masuk', pilah: 'Sampah Terpilah', olah: 'Olah Sampah', residu: 'Residu' };
+  const labels = { masuk: 'Sampah Masuk', campur: 'Sampah Campur', pilah: 'Sampah Terpilah', olah: 'Olah Sampah', residu: 'Residu' };
   return labels[type] || type;
 }
 function getTypeEmoji(r) {
   if (r && r.is_incidental) return icons.alert;
   const type = typeof r === 'string' ? r : r.type;
-  const typeIcons = { masuk: icons.download, pilah: icons.layers, olah: icons.activity, residu: icons.trash };
+  const typeIcons = { masuk: icons.download, campur: icons.box, pilah: icons.layers, olah: icons.activity, residu: icons.trash };
   return typeIcons[type] || icons.box;
 }
 function getTypeBg(r) {
   if (r && r.is_incidental) return 'rgba(168,85,247,0.12)';
   const type = typeof r === 'string' ? r : r.type;
-  const bgs = { masuk: 'rgba(16,185,129,0.12)', pilah: 'rgba(59,130,246,0.12)', olah: 'rgba(245,158,11,0.12)', residu: 'rgba(239,68,68,0.12)' };
+  const bgs = { masuk: 'rgba(16,185,129,0.12)', campur: 'rgba(245,158,11,0.12)', pilah: 'rgba(59,130,246,0.12)', olah: 'rgba(245,158,11,0.12)', residu: 'rgba(239,68,68,0.12)' };
   return bgs[type] || 'rgba(107,114,128,0.12)';
 }
 function timeAgo(iso) {

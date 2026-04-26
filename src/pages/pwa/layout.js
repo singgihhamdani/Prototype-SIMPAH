@@ -50,7 +50,7 @@ export function renderPWALayout(title, content, activeTab = 'home') {
           <span>Riwayat</span>
         </a>
         ` : ''}
-        <a href="${['petugas', 'admin'].includes(user?.role) ? '#/pwa/input-sampah' : '#/dashboard/aduan'}" class="bottom-nav-add">
+        <a href="${['petugas', 'admin'].includes(user?.role) ? '#/pwa/sampah-masuk' : '#/dashboard/aduan'}" class="bottom-nav-add">
           ${icons.plus}
         </a>
         ${['eksekutif', 'admin'].includes(user?.role) ? `

@@ -49,11 +49,11 @@ Sistem ini menggunakan arsitektur *Role-Based Access Control* (RBAC) 4 Peran Uta
 Didesain khusus untuk operasional di lapangan menggunakan perangkat *mobile* kelas menengah ke bawah (*low-end*).
 *   **Performa Ekstra Cepat:** Flow input ringkas `< 10 detik` dengan tombol besar.
 *   **Mode Offline-First:** Pengguna dapat mencatat data di daerah tanpa sinyal internet. Data tersimpan di *cache* lokal (IndexedDB) dan di-*sync* atau dikirim secara otomatis saat jaringan tersedia.
-*   **Form Pencatatan Komprehensif:** 
-    *   *Sampah Masuk* (Masuk ke TPS).
-    *   *Sampah Terpilah* (Pemilahan berdasarkan kategori SIPSN otomatis).
-    *   *Olah Sampah / Pengolahan Mandiri* (Pencatatan sampah yang diolah mandiri menjadi produk bernilai: Pakan Ternak, Kompos, Maggot BSF, Biogas, Insinerator, Pirolisis, Eco-Enzyme, Kerajinan, dan lainnya).
-    *   *Residu* (Volume yang tidak bisa diolah dan masuk TPA).
+*   **Sistem Hub "Sampah Masuk" Terpusat:** Input operasional diorganisir dalam satu pintu (*Hub*) yang membagi alur pencatatan secara logis berdasarkan kondisi sampah:
+    *   *Campur* (Sampah campuran/tidak dipilah yang langsung diteruskan ke TPA).
+    *   *Pilah* (Pemilahan berdasarkan detail kategori SIPSN otomatis, terintegrasi langsung dengan field *Residu* untuk mencatat sisa pemilahan di satu tempat).
+    *   *Olah* (Pengolahan mandiri di sumber menjadi produk bernilai seperti Pakan Ternak, Kompos, Maggot BSF, Biogas, Kerajinan, dll).
+*   **Sistem Anti Double-Counting (Pendeteksi Sumber):** Mengakomodir transaksi B2B antar fasilitas. Terdapat opsi "Asal/Sumber Sampah" di tiap form (*Sumber Langsung* vs *Fasilitas Lain*). Sistem secara cerdas akan mengecualikan sampah dari *Fasilitas Lain* (misal: Pengepul B membeli dari Bank Sampah A) dari total agregasi kabupaten untuk mencegah penghitungan ganda yang merusak akurasi pelaporan nasional.
 *   **Input Akumulasi (Batch):** Kader di pedesaan seringkali tidak mengolah sampah setiap hari. Fitur toggle "Laporan Akumulasi" memungkinkan pengguna memasukkan total timbangan dari beberapa hari sekaligus (misal seminggu sekali), dan sistem akan **membagi rata berat per hari secara otomatis ke belakang** sehingga grafik dasbor Dinas tetap mulus tanpa lonjakan palsu (*false spike*).
 *   **Insidental Form:** Menu khusus penjadwalan kegiatan insidental (Misal: kerja bakti RT, pembersihan khusus, edukasi, lainnya).
 *   **Validasi Armada & MoU:** Fitur mencantumkan pelat nomor/kode kendaraan pada saat pembuangan ke TPA guna validasi MoU transportasi (mencegah pembuang luar kawasan/liar).

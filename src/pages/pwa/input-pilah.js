@@ -38,6 +38,16 @@ export async function renderInputPilah() {
           </select>
         </div>
 
+        <!-- Source -->
+        <div class="form-group">
+          <label class="form-label">Asal / Sumber Sampah</label>
+          <p style="font-size:var(--font-xs); color:var(--text-muted); margin-bottom:var(--space-2);">Pilih untuk mencegah penghitungan ganda.</p>
+          <select id="sourceSelect" class="form-select">
+            <option value="sumber_langsung">Sumber Langsung (Warga/Rumah Tangga/Pasar)</option>
+            <option value="fasilitas">Dari Fasilitas Lain (Pengepul/Bank Sampah Unit/TPS)</option>
+          </select>
+        </div>
+
         <div class="form-group">
           <label class="form-label">Input Berat per Kategori (kg)</label>
           <div class="pilah-categories" id="pilahCategories">
@@ -56,10 +66,28 @@ export async function renderInputPilah() {
               </div>
             `).join('')}
           </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:var(--space-4);">
+          <label class="form-label">Input Residu (kg)</label>
+          <div class="pilah-card" style="border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.03);">
+            <div class="pilah-card-header">
+              <span class="pilah-icon" style="color:#ef4444">${icons.trash}</span>
+              <span class="pilah-name">Residu ke TPA</span>
+            </div>
+            <div class="pilah-card-controls">
+              <button type="button" class="pilah-btn min-btn residu-btn">-</button>
+              <input type="number" class="form-input pilah-input residu-input" id="input-residu" value="0" step="0.5" min="0" inputmode="decimal" />
+              <span class="pilah-unit">KG</span>
+              <button type="button" class="pilah-btn plus-btn residu-btn">+</button>
+            </div>
+          </div>
+          <p style="font-size:var(--font-xs); color:var(--text-muted); margin-top:var(--space-2);">Sisa hasil pemilahan yang tidak bisa diolah dan dibuang ke TPA</p>
         </div>
 
         <div class="pilah-total" id="pilahTotal">
-          <span>Total Berat:</span>
+          <span>Total (Pilah + Residu):</span>
           <strong>0 <small>KG</small></strong>
         </div>
 
@@ -101,8 +129,8 @@ export async function renderInputPilah() {
   document.querySelectorAll('.pilah-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const isPlus = btn.classList.contains('plus-btn');
-      const code = btn.dataset.code;
-      const input = document.getElementById(`input-\${code}`);
+      const isResidu = btn.classList.contains('residu-btn');
+      const input = isResidu ? document.getElementById('input-residu') : document.getElementById(`input-${btn.dataset.code}`);
       let val = parseFloat(input.value) || 0;
       if (isPlus) { val += 1; } 
       else if (val >= 1) { val -= 1; }
@@ -125,24 +153,26 @@ export async function renderInputPilah() {
     document.querySelectorAll('.pilah-input').forEach(i => {
       total += parseFloat(i.value) || 0;
     });
-    document.getElementById('pilahTotal').innerHTML = `<span>Total Berat:</span><strong>${total.toFixed(1)} <small>KG</small></strong>`;
+    document.getElementById('pilahTotal').innerHTML = `<span>Total (Pilah + Residu):</span><strong>${total.toFixed(1)} <small>KG</small></strong>`;
   }
 
   // Submit
   document.getElementById('pilahForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const items = [];
-    let totalKg = 0;
-    document.querySelectorAll('.pilah-input').forEach(i => {
+    let totalPilah = 0;
+    const residuVal = parseFloat(document.getElementById('input-residu').value) || 0;
+
+    document.querySelectorAll('.pilah-input:not(.residu-input)').forEach(i => {
       const val = parseFloat(i.value) || 0;
       if (val > 0) {
         items.push({ category_sipsn: i.dataset.code, weight_kg: val });
-        totalKg += val;
+        totalPilah += val;
       }
     });
 
-    if (items.length === 0) {
-      showToast('Masukkan minimal satu kategori', 'warning');
+    if (items.length === 0 && residuVal === 0) {
+      showToast('Masukkan minimal satu kategori atau residu', 'warning');
       return;
     }
 
@@ -153,24 +183,48 @@ export async function renderInputPilah() {
     try {
       const photos = photoPicker?.getPhotos() || [];
       const locationEl = document.getElementById('locationSelect');
-      const record = await addWasteRecord({
-        type: 'pilah',
-        category_sipsn: items.length === 1 ? items[0].category_sipsn : 'MIX',
-        weight_kg: totalKg,
-        lat: gpsData?.latitude || null,
-        lng: gpsData?.longitude || null,
-        location_id: locationEl.value || null,
-        location_name: locationEl.value ? locationEl.options[locationEl.selectedIndex].text : '',
-        notes: document.getElementById('notesInput').value.trim(),
-        photos: photos.map(p => ({ dataUrl: p.dataUrl, name: p.name })),
-        photo_count: photos.length,
-        user_id: user.id,
-        user_name: user.name
-      }, user.id);
+      let pilahRecordId = null;
 
-      await addSortedWaste(items, record.id, user.id);
-      showToast(`${items.length} kategori terpilah berhasil disimpan!`, 'success');
-      setTimeout(() => { window.location.hash = '#/pwa/home'; }, 800);
+      if (items.length > 0) {
+        const record = await addWasteRecord({
+          type: 'pilah',
+          source_type: document.getElementById('sourceSelect').value,
+          category_sipsn: items.length === 1 ? items[0].category_sipsn : 'MIX',
+          weight_kg: totalPilah,
+          lat: gpsData?.latitude || null,
+          lng: gpsData?.longitude || null,
+          location_id: locationEl.value || null,
+          location_name: locationEl.value ? locationEl.options[locationEl.selectedIndex].text : '',
+          notes: document.getElementById('notesInput').value.trim(),
+          photos: photos.map(p => ({ dataUrl: p.dataUrl, name: p.name })),
+          photo_count: photos.length,
+          user_id: user.id,
+          user_name: user.name
+        }, user.id);
+        pilahRecordId = record.id;
+        await addSortedWaste(items, record.id, user.id);
+      }
+
+      if (residuVal > 0) {
+        await addWasteRecord({
+          type: 'residu',
+          source_type: document.getElementById('sourceSelect').value,
+          category_sipsn: 'MIX',
+          weight_kg: residuVal,
+          lat: gpsData?.latitude || null,
+          lng: gpsData?.longitude || null,
+          location_id: locationEl.value || null,
+          location_name: locationEl.value ? locationEl.options[locationEl.selectedIndex].text : '',
+          notes: (document.getElementById('notesInput').value.trim() + (pilahRecordId ? ' [Sisa pemilahan]' : '')).trim(),
+          photos: !pilahRecordId ? photos.map(p => ({ dataUrl: p.dataUrl, name: p.name })) : [], // Attach photos to residu if no pilah record
+          photo_count: !pilahRecordId ? photos.length : 0,
+          user_id: user.id,
+          user_name: user.name
+        }, user.id);
+      }
+
+      showToast('Data pemilahan berhasil disimpan!', 'success');
+      setTimeout(() => { window.location.hash = '#/pwa/sampah-masuk'; }, 800);
     } catch (err) {
       showToast('Gagal: ' + err.message, 'error');
       btn.innerHTML = `${icons.recycle} Simpan Data Pilah`;

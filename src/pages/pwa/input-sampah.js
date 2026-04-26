@@ -1,6 +1,5 @@
-// SIMPAH - Input Sampah Masuk (Waste Input Form)
+// SIMPAH - Input Sampah Campur (Mixed Waste → TPA)
 import { icons } from '../../components/icons.js';
-import { SIPSN_CATEGORIES } from '../../utils/sipsn.js';
 import { getCurrentUser } from '../../utils/helpers.js';
 import { getCurrentPosition } from '../../utils/gps.js';
 import { addWasteRecord, getAllLocations, getAllFleet } from '../../db/store.js';
@@ -14,14 +13,13 @@ export async function renderInputSampah() {
 
   const locations = await getAllLocations();
   const fleet = await getAllFleet();
-  let selectedCategory = null;
   let gpsData = null;
   let photoPicker = null;
 
   // Try to get GPS immediately
   captureGPS();
 
-  renderPWALayout('Sampah Masuk', `
+  renderPWALayout('Sampah Campur', `
     <div class="pwa-form page-enter">
       <!-- GPS Indicator -->
       <div class="gps-indicator pending" id="gpsStatus">
@@ -30,17 +28,34 @@ export async function renderInputSampah() {
       </div>
 
       <form id="wasteForm">
-        <!-- Category Selection -->
-        <div class="form-group">
-          <label class="form-label">Kategori SIPSN</label>
-          <div class="category-grid" id="categoryGrid">
-            ${SIPSN_CATEGORIES.map(cat => `
-              <div class="category-chip" data-code="${cat.code}" id="cat-${cat.code}">
-                <span class="category-emoji" style="color:${cat.color}">${cat.icon}</span>
-                <span>${cat.name}</span>
-              </div>
-            `).join('')}
+        <!-- Info Banner -->
+        <div class="campur-info-banner">
+          <span class="campur-info-icon">${icons.alert}</span>
+          <div>
+            <strong>Sampah Campur (Tidak Dipilah)</strong>
+            <p>Sampah ini tercatat sebagai "tidak tereduksi" di SIPSN karena tidak melalui proses pemilahan.</p>
           </div>
+        </div>
+
+        <!-- Source -->
+        <div class="form-group">
+          <label class="form-label">Asal / Sumber Sampah</label>
+          <p style="font-size:var(--font-xs); color:var(--text-muted); margin-bottom:var(--space-2);">Pilih untuk mencegah penghitungan ganda (double counting).</p>
+          <select id="sourceSelect" class="form-select form-input-lg">
+            <option value="sumber_langsung">Sumber Langsung (Warga/Rumah Tangga/Pasar)</option>
+            <option value="fasilitas">Dari Fasilitas Lain (Pengepul/Bank Sampah Unit/TPS)</option>
+          </select>
+        </div>
+
+        <!-- Destination -->
+        <div class="form-group">
+          <label class="form-label">Tujuan Pembuangan</label>
+          <select id="campurDestSelect" class="form-select form-input-lg">
+            <option value="tpa">TPA</option>
+            <option value="sanitary_landfill">Sanitary Landfill</option>
+            <option value="insinerasi">Insinerasi</option>
+            <option value="lainnya">Lainnya</option>
+          </select>
         </div>
 
         <!-- Weight Input -->
@@ -106,11 +121,15 @@ export async function renderInputSampah() {
 
         <!-- Submit -->
         <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
-          ${icons.plus} Simpan Data
+          ${icons.plus} Simpan Data Campur
         </button>
       </form>
     </div>
     <style>
+      .campur-info-banner { display:flex; gap:var(--space-3); align-items:flex-start; padding:var(--space-4); border-radius:var(--radius-lg); background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); margin-bottom:var(--space-5); }
+      .campur-info-icon { font-size:24px; color:#f59e0b; flex-shrink:0; }
+      .campur-info-banner p { font-size:var(--font-xs); color:var(--text-secondary); margin-top:var(--space-1); line-height:1.4; }
+      .campur-info-banner strong { font-size:var(--font-sm); color:#d97706; }
       .accumulation-toggle { margin-bottom:var(--space-4); }
       .accum-label { display:flex; align-items:center; gap:var(--space-3); cursor:pointer; font-size:var(--font-base); font-weight:600; }
       .accum-label input { display:none; }
@@ -130,15 +149,6 @@ export async function renderInputSampah() {
 
   // Init photo picker
   photoPicker = initPhotoPicker('sampah');
-
-  // Wire up category selection
-  document.querySelectorAll('.category-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
-      chip.classList.add('selected');
-      selectedCategory = chip.dataset.code;
-    });
-  });
 
   // Wire up unit toggle
   document.querySelectorAll('.weight-unit-btn').forEach(btn => {
@@ -191,11 +201,6 @@ export async function renderInputSampah() {
   // Wire up form submission
   document.getElementById('wasteForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    if (!selectedCategory) {
-      showToast('Pilih kategori sampah terlebih dahulu', 'warning');
-      return;
-    }
 
     const weightInput = parseFloat(document.getElementById('weightInput').value);
     if (!weightInput || weightInput <= 0) {
@@ -214,8 +219,10 @@ export async function renderInputSampah() {
     const photos = photoPicker?.getPhotos() || [];
 
     const record = {
-      type: 'masuk',
-      category_sipsn: selectedCategory,
+      type: 'campur',
+      source_type: document.getElementById('sourceSelect').value,
+      category_sipsn: 'MIX',
+      destination: document.getElementById('campurDestSelect').value,
       weight_kg: weightKg,
       lat: gpsData?.latitude || (selectedOption?.dataset?.lat ? parseFloat(selectedOption.dataset.lat) : null),
       lng: gpsData?.longitude || (selectedOption?.dataset?.lng ? parseFloat(selectedOption.dataset.lng) : null),
@@ -257,11 +264,11 @@ export async function renderInputSampah() {
       } else {
         await addWasteRecord(record, user.id);
       }
-      showToast('Data sampah masuk berhasil disimpan!', 'success', 'Tersimpan');
-      setTimeout(() => { window.location.hash = '#/pwa/home'; }, 800);
+      showToast('Data sampah campur berhasil disimpan!', 'success', 'Tersimpan');
+      setTimeout(() => { window.location.hash = '#/pwa/sampah-masuk'; }, 800);
     } catch (err) {
       showToast('Gagal menyimpan data: ' + err.message, 'error');
-      submitBtn.innerHTML = `${icons.plus} Simpan Data`;
+      submitBtn.innerHTML = `${icons.plus} Simpan Data Campur`;
       submitBtn.disabled = false;
     }
   });
